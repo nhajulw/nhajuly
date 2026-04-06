@@ -22,17 +22,151 @@
 .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)}
 .stat-num{font-family:'Instrument Serif',serif;font-size:1.8rem;font-weight:400;color:var(--accent);line-height:1;margin-bottom:.2rem}
 .stat-lbl{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase}
-/* Hero right: Gumlet video */
-.hero-right{display:flex;align-items:center;justify-content:center;position:relative;background:var(--bg2);border-left:1px solid var(--border);overflow:hidden}
-.hr-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:34px 34px}
-.video-player{width:84%;position:relative;z-index:2}
-.vp-bar{background:var(--surface);border:1px solid var(--border2);border-bottom:none;padding:.42rem .7rem;display:flex;align-items:center;gap:.42rem;border-radius:5px 5px 0 0}
-.vp-dot{width:7px;height:7px;border-radius:50%}
-.vp-dot.r{background:#d95252}.vp-dot.y{background:#c8a030}.vp-dot.g{background:#48a860}
-.vp-file{flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--text3)}
-.vp-screen{aspect-ratio:16/9;border:1px solid var(--border2);border-top:none;position:relative;overflow:hidden}
+/* Hero right: floating window stage */
+.hero-right{display:flex;align-items:center;justify-content:center;position:relative;background:var(--bg2);border-left:1px solid var(--border);overflow:visible}
+.hr-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:34px 34px;overflow:hidden}
+
+/* ── Floating macOS window ── */
+.video-player{
+  width:84%;position:relative;z-index:100;
+  border-radius:10px;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,.18),
+    0 8px 24px rgba(0,0,0,.28),
+    0 24px 64px rgba(0,0,0,.36),
+    0 0 0 0.5px rgba(255,255,255,.07) inset;
+  transition:box-shadow .22s ease, transform .22s cubic-bezier(.34,1.4,.64,1);
+  user-select:none;
+  will-change:transform;
+}
+.video-player:hover{
+  box-shadow:
+    0 4px 12px rgba(0,0,0,.22),
+    0 16px 40px rgba(0,0,0,.36),
+    0 40px 80px rgba(0,0,0,.40),
+    0 0 0 0.5px rgba(255,255,255,.10) inset;
+}
+.video-player.is-dragging{
+  box-shadow:
+    0 8px 20px rgba(0,0,0,.28),
+    0 24px 60px rgba(0,0,0,.44),
+    0 60px 120px rgba(0,0,0,.50),
+    0 0 0 1px rgba(255,255,255,.10) inset;
+  transition:box-shadow .1s ease;
+}
+
+/* Title bar */
+.vp-bar{
+  background:rgba(30,36,52,0.94);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.09);
+  border-bottom:1px solid rgba(255,255,255,.05);
+  padding:.52rem .85rem;
+  display:flex;align-items:center;gap:.5rem;
+  border-radius:10px 10px 0 0;
+  cursor:grab;
+}
+.vp-bar:active{ cursor:grabbing; }
+[data-theme="light"] .vp-bar{
+  background:rgba(240,237,230,0.94);
+  border-color:rgba(0,0,0,.10);
+  border-bottom-color:rgba(0,0,0,.06);
+}
+
+/* Traffic lights */
+.vp-dots{display:flex;gap:5px;align-items:center;flex-shrink:0}
+.vp-dot{
+  width:12px;height:12px;border-radius:50%;
+  position:relative;transition:filter .15s;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.vp-dot::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(0,0,0,.12);border-radius:50%;
+  opacity:0;transition:opacity .12s;
+}
+.vp-bar:hover .vp-dot::after{ opacity:1; }
+.vp-dot.r{background:#ff5f57;box-shadow:0 0 0 .5px rgba(0,0,0,.15) inset}
+.vp-dot.y{background:#febc2e;box-shadow:0 0 0 .5px rgba(0,0,0,.15) inset}
+.vp-dot.g{background:#28c840;box-shadow:0 0 0 .5px rgba(0,0,0,.15) inset}
+
+/* Traffic light icons on hover */
+.vp-dot.r::before{ content:'✕'; }
+.vp-dot.y::before{ content:'−'; }
+.vp-dot.g::before{ content:'⤢'; }
+.vp-dot::before{
+  font-size:7px;line-height:1;font-weight:700;
+  color:rgba(0,0,0,.45);
+  opacity:0;transition:opacity .12s;
+  position:absolute;
+}
+.vp-bar:hover .vp-dot::before{ opacity:1; }
+
+/* Window title */
+.vp-file{
+  flex:1;text-align:center;
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;
+  color:var(--text3);letter-spacing:.04em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+/* Window controls right side */
+.vp-controls{
+  display:flex;gap:.5rem;align-items:center;flex-shrink:0;
+}
+.vp-ctrl-btn{
+  font-family:'JetBrains Mono',monospace;font-size:.48rem;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text3);padding:.18rem .5rem;
+  border:1px solid var(--border);
+  background:transparent;
+  transition:color .15s, border-color .15s;
+  line-height:1;
+}
+.vp-ctrl-btn:hover{ color:var(--accent);border-color:var(--accent); }
+
+/* Video screen */
+.vp-screen{
+  aspect-ratio:16/9;
+  border:1px solid rgba(255,255,255,.07);
+  border-top:none;
+  position:relative;overflow:hidden;
+  border-radius:0;
+}
 .vp-screen iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
-.vp-meta{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--text3);margin-top:.5rem;text-align:center}
+
+/* Footer bar */
+.vp-meta{
+  background:rgba(20,26,40,0.88);
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.06);
+  border-top:none;
+  font-family:'JetBrains Mono',monospace;font-size:.52rem;
+  color:var(--text3);padding:.32rem .85rem;
+  text-align:center;letter-spacing:.04em;
+  border-radius:0 0 10px 10px;
+  display:flex;align-items:center;justify-content:center;gap:.6rem;
+}
+[data-theme="light"] .vp-meta{
+  background:rgba(230,226,218,0.88);
+  border-color:rgba(0,0,0,.07);
+}
+.vp-meta::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:var(--accent);opacity:.6;flex-shrink:0;
+}
+
+/* Drag hint label — fades out after first drag */
+.vp-drag-hint{
+  position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);
+  font-family:'JetBrains Mono',monospace;font-size:.52rem;
+  color:var(--text3);letter-spacing:.08em;text-transform:uppercase;
+  white-space:nowrap;opacity:.55;
+  transition:opacity .4s;pointer-events:none;
+}
+.video-player.dragged .vp-drag-hint{ opacity:0; }
 /* ── COURSES preview ── */
 .courses{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
 .c-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border)}
@@ -232,10 +366,17 @@
   </div>
   <div class="hero-right" data-cursor="grab">
     <div class="hr-grid"></div>
-    <div class="video-player">
-      <div class="vp-bar">
-        <div class="vp-dot r"></div><div class="vp-dot y"></div><div class="vp-dot g"></div>
+    <div class="video-player" id="floatWin">
+      <div class="vp-bar" id="floatWinBar">
+        <div class="vp-dots">
+          <div class="vp-dot r"></div>
+          <div class="vp-dot y"></div>
+          <div class="vp-dot g"></div>
+        </div>
         <div class="vp-file">nhajuly — intro reel</div>
+        <div class="vp-controls">
+          <button class="vp-ctrl-btn" id="floatWinReset" title="Reset position">↺ reset</button>
+        </div>
       </div>
       <!-- ══ GUMLET VIDEO EMBED ══
            This is the Gumlet player embed provided by the site owner.
@@ -252,6 +393,7 @@
         </iframe>
       </div>
       <div class="vp-meta">Stream Only — No Download · nhajuly © 2025</div>
+      <div class="vp-drag-hint">⠿ drag to move</div>
     </div>
   </div>
 </section>
@@ -310,5 +452,143 @@
 </footer>
 
 <script src="shared.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════
+   Floating window — macOS-style drag for #floatWin
+   - Drag by title bar (#floatWinBar)
+   - Constrained to viewport with padding
+   - Smooth release with momentum decay
+   - Reset button snaps back to origin with spring
+   - Pointer events on iframe blocked during drag
+═══════════════════════════════════════════════════════ */
+(function(){
+  var win   = document.getElementById('floatWin');
+  var bar   = document.getElementById('floatWinBar');
+  var reset = document.getElementById('floatWinReset');
+  if (!win || !bar) return;
+
+  var isDragging = false;
+  var originX = 0, originY = 0;   /* current translate offset */
+  var startMX, startMY;           /* mouse pos at drag start  */
+  var startOX, startOY;           /* offset at drag start     */
+  var lastMX, lastMY, lastT;      /* for velocity             */
+  var velX = 0, velY = 0;
+  var rafId = null;
+
+  /* Block iframe interaction during drag so mouse events don't get swallowed */
+  var screen = win.querySelector('.vp-screen');
+
+  function setTranslate(x, y) {
+    originX = x; originY = y;
+    win.style.transform = 'translate3d(' + x + 'px,' + y + 'px, 0)';
+  }
+
+  /* Constrain to viewport with some breathing room */
+  function clamp(x, y) {
+    var r    = win.getBoundingClientRect();
+    var pad  = 24;
+    var minX = -(r.left - pad);
+    var maxX = window.innerWidth - r.right - pad;
+    var minY = -(r.top - pad);
+    var maxY = window.innerHeight - r.bottom - pad;
+    return {
+      x: Math.min(Math.max(x, minX + originX), maxX + originX),
+      y: Math.min(Math.max(y, minY + originY), maxY + originY)
+    };
+  }
+
+  /* ── Drag start ── */
+  bar.addEventListener('mousedown', function(e) {
+    if (e.target === reset) return; /* don't drag on reset btn */
+    isDragging = true;
+    startMX = e.clientX; startMY = e.clientY;
+    startOX = originX;   startOY = originY;
+    lastMX = e.clientX;  lastMY = e.clientY;
+    lastT  = Date.now();
+    velX = 0; velY = 0;
+
+    win.classList.add('is-dragging', 'dragged');
+    if (screen) screen.style.pointerEvents = 'none';
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+
+    e.preventDefault();
+  });
+
+  /* ── Drag move ── */
+  document.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    var dx = e.clientX - startMX;
+    var dy = e.clientY - startMY;
+    var nx = startOX + dx;
+    var ny = startOY + dy;
+    var c  = clamp(nx, ny);
+
+    /* Velocity tracking */
+    var now = Date.now();
+    var dt  = Math.max(now - lastT, 1);
+    velX = (e.clientX - lastMX) / dt;
+    velY = (e.clientY - lastMY) / dt;
+    lastMX = e.clientX; lastMY = e.clientY; lastT = now;
+
+    setTranslate(c.x, c.y);
+  });
+
+  /* ── Drag end — release with gentle momentum ── */
+  document.addEventListener('mouseup', function() {
+    if (!isDragging) return;
+    isDragging = false;
+    win.classList.remove('is-dragging');
+    if (screen) screen.style.pointerEvents = '';
+
+    /* Momentum glide — decay velocity */
+    var FRICTION = 0.88;
+    function glide() {
+      if (Math.abs(velX) < 0.05 && Math.abs(velY) < 0.05) return;
+      velX *= FRICTION;
+      velY *= FRICTION;
+      var c = clamp(originX + velX * 16, originY + velY * 16);
+      setTranslate(c.x, c.y);
+      rafId = requestAnimationFrame(glide);
+    }
+    glide();
+  });
+
+  /* ── Reset: spring back to 0,0 ── */
+  reset.addEventListener('click', function() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    /* Animate back with CSS transition temporarily */
+    win.style.transition = 'transform .55s cubic-bezier(.34,1.3,.64,1), box-shadow .22s ease';
+    setTranslate(0, 0);
+    setTimeout(function(){
+      win.style.transition = '';
+    }, 600);
+  });
+
+  /* Touch support */
+  bar.addEventListener('touchstart', function(e) {
+    if (e.target === reset) return;
+    var t = e.touches[0];
+    isDragging = true;
+    startMX = t.clientX; startMY = t.clientY;
+    startOX = originX;   startOY = originY;
+    win.classList.add('is-dragging', 'dragged');
+    if (screen) screen.style.pointerEvents = 'none';
+  }, {passive:true});
+
+  document.addEventListener('touchmove', function(e) {
+    if (!isDragging) return;
+    var t = e.touches[0];
+    var c = clamp(startOX + t.clientX - startMX, startOY + t.clientY - startMY);
+    setTranslate(c.x, c.y);
+  }, {passive:true});
+
+  document.addEventListener('touchend', function() {
+    if (!isDragging) return;
+    isDragging = false;
+    win.classList.remove('is-dragging');
+    if (screen) screen.style.pointerEvents = '';
+  });
+})();
+</script>
 </body>
 </html>
