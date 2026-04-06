@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="nhajuly Checkout — Secure payment for courses and digital products by Panha Lory."/>
+<title>nhajuly — Checkout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+/* ── HERO ── */
+.co-hero{
+  min-height:34vh;display:flex;flex-direction:column;justify-content:flex-end;
+  padding:8rem 5rem 3.5rem;position:relative;z-index:2;
+  border-bottom:1px solid var(--border);background:var(--bg2);overflow:hidden;
+}
+.co-hero::before{
+  content:'';position:absolute;top:0;right:0;bottom:0;width:55%;
+  background:linear-gradient(135deg,transparent,var(--accent-d));pointer-events:none;
+}
+.co-hero-tag{
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--text3);margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:.6rem;position:relative;
+}
+.co-hero-tag::before{content:'';width:18px;height:1px;background:var(--text3)}
+.co-hero-title{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(2.4rem,5vw,4rem);font-weight:400;
+  line-height:1.02;letter-spacing:-.03em;color:var(--text);
+  margin-bottom:.8rem;position:relative;
+}
+.co-hero-title em{font-style:italic;color:var(--accent)}
+.co-hero-sub{
+  font-size:.83rem;color:var(--text2);max-width:500px;
+  line-height:1.9;font-weight:300;position:relative;
+}
+.co-hero-trust{
+  display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;
+  margin-top:1.8rem;position:relative;
+}
+.co-trust-item{
+  display:flex;align-items:center;gap:.4rem;
+  font-family:'JetBrains Mono',monospace;font-size:.56rem;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--text3);
+}
+
+/* ── LAYOUT ── */
+.co-layout{
+  display:grid;grid-template-columns:1fr 1.15fr;
+  align-items:start;
+}
+.co-left{
+  border-right:1px solid var(--border);
+  padding:3rem 3.5rem;
+  position:sticky;top:64px;
+  max-height:calc(100vh - 64px);overflow-y:auto;
+}
+.co-left::-webkit-scrollbar{width:3px}
+.co-left::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.co-right{padding:3rem 3.5rem}
+
+/* ── LABELS ── */
+.co-label{
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--text3);
+  margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem;
+}
+.co-label::before{content:'//';color:var(--accent)}
+
+/* ── CART SUMMARY ── */
+.cart-summary-empty{
+  padding:1.8rem;border:1px solid var(--border);background:var(--bg2);
+  text-align:center;margin-bottom:1.2rem;
+}
+.cart-summary-empty p{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--text3);
+  margin-bottom:1rem;
+}
+.co-cart-list{display:flex;flex-direction:column;gap:.35rem;margin-bottom:1.2rem}
+.co-cart-item{
+  display:flex;align-items:center;gap:.7rem;padding:.75rem .85rem;
+  border:1px solid var(--border);background:var(--bg);transition:all .15s;
+}
+.co-cart-item:hover{background:var(--surface);border-color:var(--border2)}
+.co-ci-icon{
+  width:34px;height:34px;background:var(--surface2);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:.48rem;
+  color:var(--text3);letter-spacing:.04em;text-transform:uppercase;
+}
+.co-ci-info{flex:1;min-width:0}
+.co-ci-name{font-size:.82rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.co-ci-type{
+  font-family:'JetBrains Mono',monospace;font-size:.54rem;
+  color:var(--text3);letter-spacing:.05em;text-transform:uppercase;
+}
+.co-ci-price{font-family:'Instrument Serif',serif;font-size:.98rem;color:var(--accent);flex-shrink:0}
+.co-ci-remove{
+  font-family:'JetBrains Mono',monospace;font-size:.56rem;
+  color:var(--text3);padding:.16rem .4rem;border:1px solid var(--border);
+  transition:all .15s;flex-shrink:0;
+}
+.co-ci-remove:hover{color:var(--purple);border-color:var(--purple)}
+
+/* ── PICKER ── */
+.co-picker-toggle{
+  width:100%;text-align:left;display:flex;align-items:center;gap:.5rem;
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--text3);
+  padding:.5rem 0;border-bottom:1px solid var(--border);
+  margin-bottom:.8rem;transition:color .2s;
+  background:none;border-top:none;border-left:none;border-right:none;
+}
+.co-picker-toggle:hover{color:var(--accent)}
+.toggle-icon{
+  width:16px;height:16px;border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;line-height:1;flex-shrink:0;transition:transform .2s;
+}
+.co-picker-toggle.open .toggle-icon{transform:rotate(45deg)}
+.co-product-list{display:flex;flex-direction:column;gap:.25rem;margin-bottom:1.2rem}
+.co-product-list.collapsed{display:none}
+.co-prod-row{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.58rem .72rem;border:1px solid var(--border);
+  background:var(--bg);transition:all .15s;
+}
+.co-prod-row:hover{border-color:var(--border2);background:var(--surface)}
+.co-prod-row.selected{border-color:var(--accent);background:var(--accent-d)}
+.co-prod-row input[type=checkbox]{accent-color:var(--accent);width:13px;height:13px;flex-shrink:0}
+.co-prod-row-info{flex:1;min-width:0}
+.co-prod-row-name{font-size:.8rem;color:var(--text);line-height:1.25}
+.co-prod-row-sub{
+  font-family:'JetBrains Mono',monospace;font-size:.52rem;
+  letter-spacing:.04em;text-transform:uppercase;color:var(--text3);
+}
+.co-prod-row-price{
+  font-family:'Instrument Serif',serif;font-size:.95rem;
+  color:var(--text);flex-shrink:0;
+}
+
+/* ── ORDER TOTAL ── */
+.co-total-wrap{
+  padding:1.2rem 1rem;border:1px solid var(--border2);
+  background:var(--surface);margin-top:.8rem;
+}
+.co-total-rows{display:flex;flex-direction:column;gap:.45rem;margin-bottom:.8rem}
+.co-total-row{display:flex;justify-content:space-between;align-items:baseline}
+.co-total-key{
+  font-family:'JetBrains Mono',monospace;font-size:.56rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--text3);
+}
+.co-total-val{font-size:.8rem;color:var(--text2)}
+.co-total-divider{height:1px;background:var(--border);margin:.65rem 0}
+.co-grand-row{display:flex;justify-content:space-between;align-items:baseline}
+.co-grand-key{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--text);
+}
+.co-grand-val{
+  font-family:'Instrument Serif',serif;font-size:2rem;
+  color:var(--text);line-height:1;
+}
+
+/* ── PAYMENT METHODS ── */
+.pay-methods{display:flex;flex-direction:column;gap:.28rem;margin-bottom:1.6rem}
+.pay-row{
+  display:flex;align-items:center;gap:.75rem;padding:.72rem .85rem;
+  border:1px solid var(--border);background:var(--surface);
+  transition:all .15s;
+}
+.pay-row:hover{border-color:var(--border2);background:var(--bg2)}
+.pay-row.active{border-color:var(--accent);background:var(--accent-d)}
+.pay-chip{
+  width:40px;height:25px;border-radius:3px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:.5rem;flex-shrink:0;
+}
+.chip-card{background:#0e1c30;color:var(--blue);border:1px solid rgba(110,160,190,.22)}
+.chip-aba{background:#9e0018;color:#ffd8dd;border:1px solid rgba(200,0,30,.25)}
+.chip-qr{background:#04421e;color:#9addb8;border:1px solid rgba(20,168,0,.2)}
+.pay-info{flex:1}
+.pay-info .nm{font-size:.82rem;color:var(--text);line-height:1.25}
+.pay-info .dc{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--text3)}
+.pay-tag{
+  font-family:'JetBrains Mono',monospace;font-size:.5rem;
+  letter-spacing:.06em;text-transform:uppercase;padding:.14rem .42rem;
+  border:1px solid var(--border);color:var(--text3);flex-shrink:0;
+}
+.pay-row.active .pay-tag{border-color:var(--accent);color:var(--accent)}
+.pay-dot{
+  width:8px;height:8px;border-radius:50%;
+  border:1.5px solid var(--border2);flex-shrink:0;transition:all .15s;
+}
+.pay-row.active .pay-dot{background:var(--accent);border-color:var(--accent)}
+
+/* ── FORM ── */
+.co-form-section{margin-bottom:1.6rem}
+.co-form-title{
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--text3);
+  margin-bottom:.9rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);
+}
+.fr{margin-bottom:.72rem}
+.fr label{
+  display:block;font-family:'JetBrains Mono',monospace;font-size:.55rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:.25rem;
+}
+.fr input,.fr select,.fr textarea{
+  width:100%;padding:.55rem .65rem;background:var(--bg);
+  border:1px solid var(--border2);color:var(--text);
+  font-family:'Instrument Sans',sans-serif;font-size:.82rem;
+  outline:none;transition:border-color .2s;appearance:none;border-radius:0;
+}
+.fr input:focus,.fr select:focus,.fr textarea:focus{border-color:var(--accent)}
+.fr input::placeholder{color:var(--text3)}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
+
+/* Payment panels */
+.card-fields,.aba-fields,.khqr-panel{display:none}
+.card-fields.active,.aba-fields.active,.khqr-panel.active{display:block}
+
+.aba-note{padding:1rem 1.1rem;background:var(--bg);border:1px solid var(--border2);margin-bottom:.8rem}
+.aba-note-label{
+  font-family:'JetBrains Mono',monospace;font-size:.54rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:.4rem;
+}
+.aba-note p{font-size:.8rem;color:var(--text2);line-height:1.75}
+.aba-note a{color:var(--accent)}
+
+.khqr-box{
+  background:var(--bg);border:1px solid var(--border2);
+  padding:1.5rem;text-align:center;margin-bottom:.8rem;
+}
+.qr-wrap{
+  width:148px;height:148px;margin:0 auto 1rem;background:#f5f3ee;
+  padding:11px;display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(0,0,0,.06);
+}
+.qr-wrap svg{width:126px;height:126px;display:block}
+.khqr-name{font-family:'Instrument Serif',serif;font-size:1rem;color:var(--accent);margin-bottom:.2rem}
+.khqr-bank{
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;
+  color:var(--text3);margin-bottom:.9rem;
+}
+.khqr-steps{display:flex;flex-direction:column;gap:.38rem;margin-bottom:.8rem;text-align:left}
+.khqr-step{display:flex;align-items:flex-start;gap:.55rem;font-size:.77rem;color:var(--text2);line-height:1.6}
+.khqr-step-n{
+  font-family:'JetBrains Mono',monospace;font-size:.55rem;
+  color:var(--accent);flex-shrink:0;margin-top:.14rem;
+}
+.khqr-confirm{
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;
+  color:var(--text2);line-height:1.8;padding:.65rem .8rem;
+  border:1px solid var(--border);background:var(--surface);text-align:left;
+}
+.khqr-confirm a{color:var(--accent)}
+
+/* Submit */
+.co-submit-btn{
+  width:100%;padding:.88rem 1rem;background:var(--accent);color:var(--bg);
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.13em;
+  text-transform:uppercase;border:none;transition:all .22s;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+}
+.co-submit-btn:hover{background:var(--purple);color:#fff}
+.co-sec-note{
+  text-align:center;font-family:'JetBrains Mono',monospace;
+  font-size:.53rem;color:var(--text3);margin-top:.6rem;
+  display:flex;align-items:center;justify-content:center;gap:.35rem;
+}
+.co-trust-band{
+  display:flex;gap:1.5rem;flex-wrap:wrap;
+  margin-top:1.8rem;padding-top:1.4rem;border-top:1px solid var(--border);
+}
+.co-trust-badge{
+  display:flex;align-items:center;gap:.38rem;
+  font-family:'JetBrains Mono',monospace;font-size:.54rem;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--text3);
+}
+.co-trust-badge svg{color:var(--accent);flex-shrink:0}
+
+/* Success modal */
+.success-modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:3000;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .35s;
+  backdrop-filter:blur(12px);padding:1.5rem;
+}
+.success-modal.show{opacity:1;pointer-events:all}
+.success-inner{
+  background:var(--surface);border:1px solid var(--border2);
+  padding:3rem 3rem 2.5rem;max-width:440px;width:100%;text-align:center;
+}
+.success-icon{
+  width:52px;height:52px;border-radius:50%;
+  background:var(--accent-d);border:1px solid rgba(130,181,160,.3);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.2rem;color:var(--accent);
+}
+.success-title{font-family:'Instrument Serif',serif;font-size:1.9rem;color:var(--text);margin-bottom:.4rem}
+.success-title em{font-style:italic;color:var(--accent)}
+.success-sub{font-size:.8rem;color:var(--text2);line-height:1.85;margin-bottom:1.6rem}
+.success-sub a{color:var(--accent)}
+.success-close{
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;
+  text-transform:uppercase;padding:.6rem 1.6rem;background:var(--accent);
+  color:var(--bg);border:none;transition:background .2s;
+}
+.success-close:hover{background:var(--purple);color:#fff}
+
+/* Responsive */
+@media(max-width:1100px){
+  .co-layout{grid-template-columns:1fr}
+  .co-left{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--border);padding:2.5rem 2rem}
+  .co-right{padding:2.5rem 2rem}
+  .co-hero{padding:8rem 2rem 3rem}
+}
+@media(max-width:640px){
+  .co-hero{padding:7.5rem 1.2rem 2.5rem}
+  .co-left,.co-right{padding:2rem 1.2rem}
+  .f2{grid-template-columns:1fr}
+  .co-trust-band{gap:1rem}
+}
+</style>
+</head>
+<body>
+
+<div class="tl-rail"></div><div class="tl-scrub"></div>
+
+<nav>
+  <a href="index.html" class="logo">nhajuly<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="courses.html">Courses</a></li>
+    <li><a href="store.html">Store</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-btn" id="themeBtn">
+      <span id="themeIcon">☽</span><span id="themeLabel">Light</span>
+    </button>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-head">
+    <div class="mobile-menu-logo">nhajuly<span>.</span></div>
+    <button class="mobile-close" id="mobileClose">✕ Close</button>
+  </div>
+  <div class="mobile-menu-links">
+    <a href="index.html">Home</a>
+    <a href="courses.html">Courses</a>
+    <a href="store.html">Store</a>
+    <a href="portfolio.html">Portfolio</a>
+  </div>
+  <div class="mobile-menu-foot">
+    <button class="theme-btn" onclick="document.getElementById('themeBtn').click()" style="width:100%;justify-content:center">
+      <span>☽</span> Toggle Theme
+    </button>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="success-modal" id="successModal">
+  <div class="success-inner">
+    <div class="success-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div class="success-title">Order <em>Received</em></div>
+    <p class="success-sub">Your payment is being processed. You'll receive a download link or course access within 24 hours.<br/><br/>Questions? Email <a href="/cdn-cgi/l/email-protection#90f8f5fcfcffd0fef8f1fae5fce9bef3fffd"><span class="__cf_email__" data-cfemail="2048454c4c4f604e48414a554c590e434f4d">[email&#160;protected]</span></a></p>
+    <button class="success-close" onclick="document.getElementById('successModal').classList.remove('show')">Back to Site</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="co-hero">
+  <div class="co-hero-tag">nhajuly / Checkout</div>
+  <h1 class="co-hero-title">Pay Your <em>Way.</em></h1>
+  <p class="co-hero-sub">Global cards and local Cambodian payment options. Nothing between you and learning.</p>
+  <div class="co-hero-trust">
+    <div class="co-trust-item">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      SSL Encrypted
+    </div>
+    <div class="co-trust-item">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Secure
+    </div>
+    <div class="co-trust-item">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      24hr Delivery
+    </div>
+    <div class="co-trust-item">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      Lifetime Access
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="co-layout">
+
+  <!-- LEFT: ORDER SUMMARY -->
+  <div class="co-left">
+    <div class="co-label">Your Order</div>
+    <div id="co-cart-display"></div>
+
+    <button class="co-picker-toggle" id="pickerToggle" onclick="togglePicker()">
+      <span class="toggle-icon">+</span>
+      <span id="pickerLabel">Add more items</span>
+    </button>
+    <div class="co-product-list collapsed" id="productList">
+      <div class="co-prod-row" onclick="toggleProduct(this)"><input type="checkbox" value="49" data-name="Color Grading Masterclass"/><div class="co-prod-row-info"><div class="co-prod-row-name">Color Grading Masterclass</div><div class="co-prod-row-sub">Course · DaVinci Resolve · 8 hrs</div></div><div class="co-prod-row-price">$49</div></div>
+      <div class="co-prod-row" onclick="toggleProduct(this)"><input type="checkbox" value="59" data-name="Fast-Paced YouTube Editing"/><div class="co-prod-row-info"><div class="co-prod-row-name">Fast-Paced YouTube Editing</div><div class="co-prod-row-sub">Course · Premiere Pro · 6 hrs</div></div><div class="co-prod-row-price">$59</div></div>
+      <div class="co-prod-row" onclick="toggleProduct(this)"><input type="checkbox" value="69" data-name="Motion Graphics Foundations"/><div class="co-prod-row-info"><div class="co-prod-row-name">Motion Graphics Foundations</div><div class="co-prod-row-sub">Course · After Effects · 10 hrs</div></div><div class="co-prod-row-price">$69</div></div>
+      <div class="co-prod-row" onclick="toggleProduct(this)"><input type="checkbox" value="29" data-name="Mobile Editing for Creators"/><div class="co-prod-row-info"><div class="co-prod-row-name">Mobile Editing for Creators</div><div class="co-prod-row-sub">Course · CapCut · 5 hrs</div></div><div class="co-prod-row-price">$29</div></div>
+      <div class="co-prod-row" onclick="toggleProduct(this)"><input type="checkbox" value="19" data-name="Cinematic LUT Pack"/><div class="co-prod-row-info"><div class="co-prod-row-name">Cinematic LUT Pack</div><div class="co-prod-row-sub">Digital Download · 25 LUTs</div></div><div class="co-prod-row-price">$19</div></div>
+      <div class="co-prod-row" onclick="toggleProduct(this)"><input type="checkbox" value="29" data-name="YouTube Edit Starter Kit"/><div class="co-prod-row-info"><div class="co-prod-row-name">YouTube Edit Starter Kit</div><div class="co-prod-row-sub">Template · Premiere Pro</div></div><div class="co-prod-row-price">$29</div></div>
+      <div class="co-prod-row" onclick="toggleProduct(this)"><input type="checkbox" value="39" data-name="Motion Graphics Bundle"/><div class="co-prod-row-info"><div class="co-prod-row-name">Motion Graphics Bundle</div><div class="co-prod-row-sub">Digital Download · 50+ .mogrt</div></div><div class="co-prod-row-price">$39</div></div>
+      <div class="co-prod-row" onclick="toggleProduct(this)"><input type="checkbox" value="24" data-name="DaVinci LUT Collection"/><div class="co-prod-row-info"><div class="co-prod-row-name">DaVinci LUT Collection</div><div class="co-prod-row-sub">Digital Download · 15 LUTs</div></div><div class="co-prod-row-price">$24</div></div>
+      <div class="co-prod-row" onclick="toggleProduct(this)"><input type="checkbox" value="22" data-name="Seamless Transitions Pack"/><div class="co-prod-row-info"><div class="co-prod-row-name">Seamless Transitions Pack</div><div class="co-prod-row-sub">Template · 35 Transitions</div></div><div class="co-prod-row-price">$22</div></div>
+      <div class="co-prod-row" onclick="toggleProduct(this)"><input type="checkbox" value="18" data-name="Caption Animation Kit"/><div class="co-prod-row-info"><div class="co-prod-row-name">Caption Animation Kit</div><div class="co-prod-row-sub">After Effects · 20 presets</div></div><div class="co-prod-row-price">$18</div></div>
+    </div>
+
+    <!-- Total -->
+    <div class="co-total-wrap">
+      <div class="co-total-rows">
+        <div class="co-total-row"><span class="co-total-key">Items</span><span class="co-total-val" id="co-item-count">—</span></div>
+        <div class="co-total-row"><span class="co-total-key">Format</span><span class="co-total-val">Digital · Instant access</span></div>
+      </div>
+      <div class="co-total-divider"></div>
+      <div class="co-grand-row">
+        <span class="co-grand-key">Order Total</span>
+        <span class="co-grand-val" id="co-grand-total">$0</span>
+      </div>
+    </div>
+
+    <!-- Payment Method -->
+    <div style="margin-top:1.8rem">
+      <div class="co-label">Payment Method</div>
+      <div class="pay-methods">
+        <div class="pay-row active" id="pm-card" onclick="selectPayment('card')">
+          <div class="pay-chip chip-card">CARD</div>
+          <div class="pay-info"><div class="nm">Credit / Debit Card</div><div class="dc">Visa · Mastercard · AMEX — worldwide</div></div>
+          <div class="pay-tag">Global</div>
+          <div class="pay-dot"></div>
+        </div>
+        <div class="pay-row" id="pm-aba" onclick="selectPayment('aba')">
+          <div class="pay-chip chip-aba">ABA</div>
+          <div class="pay-info"><div class="nm">ABA Payway</div><div class="dc">ABA Bank secure gateway</div></div>
+          <div class="pay-tag">Cambodia</div>
+          <div class="pay-dot"></div>
+        </div>
+        <div class="pay-row" id="pm-khqr" onclick="selectPayment('khqr')">
+          <div class="pay-chip chip-qr">QR</div>
+          <div class="pay-info"><div class="nm">KHQR</div><div class="dc">Any Cambodian banking app</div></div>
+          <div class="pay-tag">Cambodia</div>
+          <div class="pay-dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: FORM -->
+  <div class="co-right">
+    <div class="co-label">Complete Your Order</div>
+
+    <!-- Contact -->
+    <div class="co-form-section">
+      <div class="co-form-title">01 / Contact Information</div>
+      <div class="fr"><label>Full Name</label><input type="text" placeholder="Your full name" id="field-name"/></div>
+      <div class="fr"><label>Email Address</label><input type="email" placeholder="you@email.com" id="field-email"/></div>
+    </div>
+
+    <!-- Card -->
+    <div class="card-fields active" id="card-fields">
+      <div class="co-form-section">
+        <div class="co-form-title">02 / Card Details</div>
+        <div class="fr"><label>Cardholder Name</label><input type="text" placeholder="As printed on card"/></div>
+        <div class="fr"><label>Card Number</label><input type="text" placeholder="•••• •••• •••• ••••" maxlength="19" id="card-number"/></div>
+        <div class="f2">
+          <div class="fr"><label>Expiry</label><input type="text" placeholder="MM / YY" maxlength="7"/></div>
+          <div class="fr"><label>CVV</label><input type="text" placeholder="•••" maxlength="4"/></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA -->
+    <div class="aba-fields" id="aba-fields">
+      <div class="co-form-section">
+        <div class="co-form-title">02 / ABA Payway</div>
+        <div class="aba-note">
+          <div class="aba-note-label">How it works</div>
+          <p>Click "Continue to ABA Payway" — you'll be redirected to the <strong>ABA Payway</strong> secure gateway to complete your payment safely.<br/><br/><a href="https://payway.ababank.com" target="_blank" rel="noopener">payway.ababank.com ↗</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- KHQR -->
+    <div class="khqr-panel" id="khqr-panel">
+      <div class="co-form-section">
+        <div class="co-form-title">02 / KHQR Scan &amp; Pay</div>
+        <div class="khqr-box">
+          <div class="qr-wrap">
+            <!-- ── REPLACE with your actual KHQR code image ──
+                 <img src="assets/khqr.png" style="width:126px;height:126px;display:block"/>
+            ── ─────────────────────────────────────────────── -->
+            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+              <rect width="120" height="120" fill="white"/>
+              <rect x="4" y="4" width="28" height="28" fill="#1a2035"/>
+              <rect x="8" y="8" width="20" height="20" fill="white"/>
+              <rect x="11" y="11" width="14" height="14" fill="#1a2035"/>
+              <rect x="88" y="4" width="28" height="28" fill="#1a2035"/>
+              <rect x="92" y="8" width="20" height="20" fill="white"/>
+              <rect x="95" y="11" width="14" height="14" fill="#1a2035"/>
+              <rect x="4" y="88" width="28" height="28" fill="#1a2035"/>
+              <rect x="8" y="92" width="20" height="20" fill="white"/>
+              <rect x="11" y="95" width="14" height="14" fill="#1a2035"/>
+              <rect x="36" y="4" width="4" height="4" fill="#1a2035"/>
+              <rect x="44" y="4" width="4" height="4" fill="#1a2035"/>
+              <rect x="52" y="4" width="4" height="4" fill="#1a2035"/>
+              <rect x="60" y="8" width="4" height="4" fill="#1a2035"/>
+              <rect x="68" y="4" width="4" height="4" fill="#1a2035"/>
+              <rect x="4" y="36" width="4" height="4" fill="#1a2035"/>
+              <rect x="4" y="44" width="4" height="4" fill="#1a2035"/>
+              <rect x="36" y="36" width="4" height="4" fill="#1a2035"/>
+              <rect x="48" y="40" width="4" height="4" fill="#1a2035"/>
+              <rect x="60" y="36" width="4" height="4" fill="#1a2035"/>
+              <rect x="72" y="44" width="4" height="4" fill="#1a2035"/>
+              <rect x="84" y="36" width="4" height="4" fill="#1a2035"/>
+              <rect x="92" y="40" width="4" height="4" fill="#1a2035"/>
+              <rect x="104" y="36" width="4" height="4" fill="#1a2035"/>
+              <rect x="36" y="52" width="4" height="4" fill="#1a2035"/>
+              <rect x="48" y="56" width="4" height="4" fill="#1a2035"/>
+              <rect x="56" y="52" width="4" height="4" fill="#1a2035"/>
+              <rect x="68" y="60" width="4" height="4" fill="#1a2035"/>
+              <rect x="80" y="52" width="4" height="4" fill="#1a2035"/>
+              <rect x="92" y="56" width="4" height="4" fill="#1a2035"/>
+              <rect x="36" y="68" width="4" height="4" fill="#1a2035"/>
+              <rect x="52" y="72" width="4" height="4" fill="#1a2035"/>
+              <rect x="64" y="68" width="4" height="4" fill="#1a2035"/>
+              <rect x="76" y="76" width="4" height="4" fill="#1a2035"/>
+              <rect x="88" y="68" width="4" height="4" fill="#1a2035"/>
+              <rect x="100" y="72" width="4" height="4" fill="#1a2035"/>
+              <rect x="36" y="84" width="4" height="4" fill="#1a2035"/>
+              <rect x="48" y="88" width="4" height="4" fill="#1a2035"/>
+              <rect x="60" y="84" width="4" height="4" fill="#1a2035"/>
+              <rect x="72" y="92" width="4" height="4" fill="#1a2035"/>
+              <rect x="84" y="88" width="4" height="4" fill="#1a2035"/>
+              <rect x="96" y="84" width="4" height="4" fill="#1a2035"/>
+              <rect x="108" y="88" width="4" height="4" fill="#1a2035"/>
+              <rect x="50" y="50" width="20" height="20" fill="white"/>
+              <text x="60" y="64" text-anchor="middle" font-size="9" font-weight="bold" fill="#04421e" font-family="sans-serif">KH</text>
+            </svg>
+          </div>
+          <div class="khqr-name">Panha Lory · nhajuly</div>
+          <!-- UPDATE YOUR ACCOUNT NUMBER -->
+          <div class="khqr-bank">ABA Bank · Account: 000 123 456</div>
+          <div class="khqr-steps">
+            <div class="khqr-step"><span class="khqr-step-n">01</span><span>Open your banking app — ABA, ACLEDA, Wing, Pi Pay, or any NBC-compliant app</span></div>
+            <div class="khqr-step"><span class="khqr-step-n">02</span><span>Tap Scan QR and point your camera at the code above</span></div>
+            <div class="khqr-step"><span class="khqr-step-n">03</span><span>Verify the amount matches your order total, then confirm payment</span></div>
+          </div>
+          <div class="khqr-confirm">⚠ After paying, email your receipt to <a href="/cdn-cgi/l/email-protection#a8c0cdc4c4c7e8c6c0c9c2ddc4d186cbc7c5"><span class="__cf_email__" data-cfemail="87efe2ebebe8c7e9efe6edf2ebfea9e4e8ea">[email&#160;protected]</span></a> — access delivered within 24 hrs.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit button -->
+    <button class="co-submit-btn" id="sub-btn" onclick="submitOrder()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Complete Purchase →
+    </button>
+    <div class="co-sec-note">
+      <svg width="9" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      SSL encrypted · Instant delivery after confirmation
+    </div>
+
+    <!-- Trust badges -->
+    <div class="co-trust-band">
+      <div class="co-trust-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Lifetime Access
+      </div>
+      <div class="co-trust-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Secure Payment
+      </div>
+      <div class="co-trust-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        24hr Support
+      </div>
+      <div class="co-trust-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Stream Anywhere
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="fl">nhajuly<span>.</span></div>
+  <div class="fc">© 2025 Panha Lory · All rights reserved.</div>
+  <div class="flinks">
+    <a href="index.html">Home</a>
+    <a href="courses.html">Courses</a>
+    <a href="store.html">Store</a>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="shared.js"></script>
+<script>
+/* Render cart into left panel */
+function renderCoCart() {
+  var cart = window._cart || [];
+  var el = document.getElementById('co-cart-display');
+  if (!el) return;
+
+  if (!cart.length) {
+    el.innerHTML =
+      '<div class="cart-summary-empty">' +
+      '<p>No items selected</p>' +
+      '<a href="courses.html" class="btn-ghost" style="font-size:.6rem;padding:.45rem 1rem;display:inline-block;margin-right:.4rem">Courses</a>' +
+      '<a href="store.html" class="btn-ghost" style="font-size:.6rem;padding:.45rem 1rem;display:inline-block">Store</a>' +
+      '</div>';
+  } else {
+    var html = '<div class="co-cart-list">';
+    cart.forEach(function(item) {
+      html +=
+        '<div class="co-cart-item">' +
+        '<div class="co-ci-icon">' + item.type.slice(0,3).toUpperCase() + '</div>' +
+        '<div class="co-ci-info">' +
+        '<div class="co-ci-name">' + item.name + '</div>' +
+        '<div class="co-ci-type">' + item.type + '</div>' +
+        '</div>' +
+        '<div class="co-ci-price">$' + item.price + '</div>' +
+        '<button class="co-ci-remove" onclick="coRemove(' + item.id + ')">✕</button>' +
+        '</div>';
+    });
+    html += '</div>';
+    el.innerHTML = html;
+  }
+  syncPicker();
+  calcCoTotal();
+}
+
+window.coRemove = function(id) {
+  window._cart = (window._cart||[]).filter(function(i){ return i.id !== id; });
+  localStorage.setItem('nhajuly-cart', JSON.stringify(window._cart));
+  window.renderCart && window.renderCart();
+  window.syncAllButtons && window.syncAllButtons();
+  renderCoCart();
+};
+
+function syncPicker() {
+  var cart = window._cart || [];
+  document.querySelectorAll('#productList .co-prod-row').forEach(function(row) {
+    var cb = row.querySelector('input');
+    if (!cb) return;
+    var inCart = cart.find(function(i){ return i.name === cb.dataset.name; });
+    cb.checked = !!inCart;
+    row.classList.toggle('selected', !!inCart);
+  });
+}
+
+function togglePicker() {
+  var list  = document.getElementById('productList');
+  var btn   = document.getElementById('pickerToggle');
+  var label = document.getElementById('pickerLabel');
+  var open  = !list.classList.contains('collapsed');
+  list.classList.toggle('collapsed', open);
+  btn.classList.toggle('open', !open);
+  label.textContent = open ? 'Add more items' : 'Hide list';
+  if (!open) syncPicker();
+}
+
+function toggleProduct(row) {
+  var cb    = row.querySelector('input');
+  if (!cb) return;
+  var name  = cb.dataset.name;
+  var price = parseInt(cb.value);
+  var cart  = window._cart || [];
+  var idx   = cart.findIndex(function(i){ return i.name === name; });
+
+  if (idx >= 0) {
+    cart.splice(idx, 1);
+  } else {
+    cart.push({ name:name, type:'Product', price:price, id:Date.now()+Math.random() });
+  }
+  window._cart = cart;
+  localStorage.setItem('nhajuly-cart', JSON.stringify(cart));
+  window.renderCart && window.renderCart();
+  window.syncAllButtons && window.syncAllButtons();
+  renderCoCart();
+}
+
+function calcCoTotal() {
+  var cart  = window._cart || [];
+  var total = cart.reduce(function(a,i){ return a+i.price; }, 0);
+  var cnt   = document.getElementById('co-item-count');
+  var gt    = document.getElementById('co-grand-total');
+  if (cnt) cnt.textContent = cart.length + (cart.length===1?' item':' items');
+  if (gt)  gt.textContent  = '$' + total;
+}
+
+function selectPayment(m) {
+  ['card','aba','khqr'].forEach(function(x){
+    document.getElementById('pm-'+x).classList.remove('active');
+  });
+  document.querySelectorAll('.card-fields,.aba-fields,.khqr-panel').forEach(function(el){
+    el.classList.remove('active');
+  });
+  document.getElementById('pm-'+m).classList.add('active');
+  if (m==='card')  { document.getElementById('card-fields').classList.add('active'); }
+  if (m==='aba')   { document.getElementById('aba-fields').classList.add('active'); }
+  if (m==='khqr')  { document.getElementById('khqr-panel').classList.add('active'); }
+
+  var sb = document.getElementById('sub-btn');
+  var icon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> ';
+  if (m==='card')  sb.innerHTML = icon + 'Complete Purchase →';
+  if (m==='aba')   sb.innerHTML = icon + 'Continue to ABA Payway →';
+  if (m==='khqr')  sb.innerHTML = icon + 'I Have Paid via KHQR →';
+}
+
+function submitOrder() {
+  var name  = (document.getElementById('field-name').value||'').trim();
+  var email = (document.getElementById('field-email').value||'').trim();
+  var cart  = window._cart || [];
+  if (!cart.length)          { alert('Please select at least one item.'); return; }
+  if (!name)                 { document.getElementById('field-name').focus(); alert('Please enter your name.'); return; }
+  if (!email||!email.includes('@')) { document.getElementById('field-email').focus(); alert('Please enter a valid email.'); return; }
+
+  localStorage.removeItem('nhajuly-cart');
+  window._cart = [];
+  window.renderCart && window.renderCart();
+  window.syncAllButtons && window.syncAllButtons();
+  document.getElementById('successModal').classList.add('sh

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="nhajuly Portfolio — Work by Panha Lory. Video editing, motion graphics, color grading for brands across Southeast Asia, US & Europe."/>
+<title>nhajuly — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+
+/* ── PAGE HERO ── */
+.p-hero{min-height:52vh;display:flex;flex-direction:column;justify-content:flex-end;padding:8rem 5rem 4rem;position:relative;z-index:2;border-bottom:1px solid var(--border)}
+.p-hero-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:1.5rem;display:flex;align-items:center;gap:.6rem}
+.p-hero-tag::before{content:'';width:18px;height:1px;background:var(--text3)}
+.p-hero-title{font-family:'Instrument Serif',serif;font-size:clamp(3rem,6vw,5.5rem);font-weight:400;line-height:1;letter-spacing:-.03em;color:var(--text);margin-bottom:1rem}
+.p-hero-title em{font-style:italic;color:var(--accent)}
+.p-hero-sub{font-size:.84rem;color:var(--text2);max-width:520px;line-height:1.88;font-weight:300}
+/* floating stats top-right */
+.p-hero-stats{position:absolute;top:7rem;right:5rem;display:flex;flex-direction:column;gap:1.2rem;text-align:right}
+.p-hs-num{font-family:'Instrument Serif',serif;font-size:2rem;font-weight:400;color:var(--accent);line-height:1}
+.p-hs-lbl{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase}
+
+/* ── FILTER BAR ── */
+.filter-bar{padding:1.5rem 5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;position:sticky;top:64px;background:var(--nav-bg);backdrop-filter:blur(20px);z-index:100}
+.filter-btn{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:.35rem .9rem;background:transparent;color:var(--text3);border:1px solid var(--border2);transition:all .2s}
+.filter-btn:hover{color:var(--text2);border-color:var(--border)}
+.filter-btn.active{color:var(--accent);border-color:var(--accent);background:var(--accent-d)}
+
+/* ── PORTFOLIO GRID ── */
+.portfolio-section{padding:4rem 5rem;position:relative;z-index:2}
+.pf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+
+/* ── PORTFOLIO CARD ── */
+.pf-card{background:var(--bg);position:relative;overflow:hidden;transition:background .22s}
+.pf-card:hover{background:var(--surface)}
+.pf-card.hidden{display:none}
+
+/* thumbnail */
+.pf-thumb{aspect-ratio:16/9;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.pf-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s,transform .5s}
+.pf-thumb img.loaded{opacity:1}
+.pf-card:hover .pf-thumb img{transform:scale(1.03)}
+.pf-thumb-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:1.4rem;font-style:italic;color:var(--text3);opacity:.4;transition:opacity .2s}
+.pf-card:hover .pf-thumb-ph{opacity:.15}
+/* gradient backgrounds per category */
+.bg-color{background:linear-gradient(135deg,#07101e,#0e2040)}
+.bg-motion{background:linear-gradient(135deg,#110818,#200e38)}
+.bg-edit{background:linear-gradient(135deg,#081410,#102820)}
+.bg-brand{background:linear-gradient(135deg,#180a08,#301510)}
+
+/* play indicator overlay */
+.pf-ov{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0);transition:background .25s}
+.pf-card:hover .pf-ov{background:rgba(0,0,0,.3)}
+.pf-play{width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.7);transition:opacity .25s,transform .25s;background:rgba(0,0,0,.2)}
+.pf-card:hover .pf-play{opacity:1;transform:scale(1)}
+.pf-play::after{content:'';width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:12px solid white;margin-left:3px}
+
+/* card meta */
+.pf-meta{position:absolute;bottom:0;left:0;right:0;padding:.6rem .8rem;background:linear-gradient(to top,rgba(0,0,0,.7),transparent);transform:translateY(100%);transition:transform .25s}
+.pf-card:hover .pf-meta{transform:translateY(0)}
+.pf-meta-cat{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.2rem}
+.pf-meta-client{font-size:.7rem;color:rgba(255,255,255,.7)}
+
+/* card body */
+.pf-body{padding:1rem 1.1rem}
+.pf-cat{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:.25rem}
+.pf-title{font-family:'Instrument Serif',serif;font-size:.95rem;color:var(--text);line-height:1.3;margin-bottom:.4rem}
+.pf-desc{font-size:.76rem;color:var(--text2);line-height:1.75;font-weight:300;margin-bottom:.7rem}
+.pf-tags{display:flex;flex-wrap:wrap;gap:.28rem}
+.pf-tag{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.05em;text-transform:uppercase;padding:.14rem .38rem;background:var(--surface2);color:var(--text3);border:1px solid var(--border)}
+.pf-bar{position:absolute;bottom:0;left:0;right:0;height:1.5px;transform:scaleX(0);transform-origin:left;transition:transform .32s}
+.pf-card:hover .pf-bar{transform:scaleX(1)}
+
+/* featured card — spans 2 cols */
+.pf-card.featured{grid-column:span 2}
+.pf-card.featured .pf-thumb{aspect-ratio:21/9}
+
+/* ── SELECTED WORK / REEL ── */
+.reel-section{background:var(--bg2);border-top:1px solid var(--border);padding:6rem 5rem}
+.reel-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.reel-title{font-family:'Instrument Serif',serif;font-size:clamp(2rem,3.5vw,2.8rem);font-weight:400;letter-spacing:-.02em;margin-bottom:1rem}
+.reel-title em{font-style:italic;color:var(--accent)}
+.reel-body{font-size:.82rem;color:var(--text2);line-height:1.9;font-weight:300;margin-bottom:1.5rem}
+.reel-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:2rem}
+.reel-item{display:flex;align-items:center;gap:.7rem;font-size:.78rem;color:var(--text2)}
+.reel-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.reel-video{aspect-ratio:16/9;background:var(--bg);border:1px solid var(--border2);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.reel-scan{position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.4;animation:scan 3.5s linear infinite}
+@keyframes scan{0%{top:-2px}100%{top:100%}}
+.reel-play{width:58px;height:58px;border-radius:50%;border:1px solid rgba(130,181,160,.35);display:flex;align-items:center;justify-content:center;position:relative}
+.reel-play::after{content:'';width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:18px solid var(--accent);margin-left:4px}
+.reel-play::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(130,181,160,.12);animation:pulse 2.5s ease-out infinite}
+@keyframes pulse{0%{transform:scale(1);opacity:.5}100%{transform:scale(1.5);opacity:0}}
+.reel-label{position:absolute;bottom:.7rem;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:.52rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.reel-tl{position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--surface2)}
+.reel-tl-prog{width:28%;height:100%;background:linear-gradient(90deg,var(--accent),var(--purple))}
+.reel-grid-info{position:absolute;top:.6rem;right:.6rem;font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--text3);letter-spacing:.06em;border:1px solid var(--border2);padding:.15rem .4rem;background:var(--surface)}
+
+/* ── TESTIMONIALS ── */
+.testi-section{background:var(--bg);border-top:1px solid var(--border);padding:6rem 5rem}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:3rem}
+.testi-card{background:var(--bg);padding:1.8rem;transition:background .22s}
+.testi-card:hover{background:var(--surface)}
+.testi-stars{display:flex;gap:.2rem;margin-bottom:1rem}
+.star{color:var(--orange);font-size:.75rem}
+.testi-quote{font-family:'Instrument Serif',serif;font-size:1rem;font-style:italic;color:var(--text);line-height:1.6;margin-bottom:1rem}
+.testi-sep{height:1px;background:var(--border);margin-bottom:.9rem}
+.testi-name{font-size:.78rem;font-weight:500;color:var(--text)}
+.testi-role{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--text3);letter-spacing:.06em}
+.testi-platform{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.06em;text-transform:uppercase;padding:.14rem .42rem;border:1px solid var(--border);color:var(--text3);margin-top:.4rem}
+
+/* ── CTA BAND ── */
+.cta-band{background:var(--bg2);border-top:1px solid var(--border);padding:5rem;display:flex;align-items:center;justify-content:space-between;gap:3rem}
+.cta-text h2{font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3vw,2.4rem);font-weight:400;letter-spacing:-.015em;margin-bottom:.5rem}
+.cta-text h2 em{font-style:italic;color:var(--accent)}
+.cta-text p{font-size:.82rem;color:var(--text2);font-weight:300}
+.cta-actions{display:flex;gap:.75rem;flex-shrink:0}
+
+@media(max-width:1024px){
+  .pf-grid{grid-template-columns:1fr 1fr}
+  .pf-card.featured{grid-column:span 1}
+  .pf-card.featured .pf-thumb{aspect-ratio:16/9}
+  .reel-inner{grid-template-columns:1fr;gap:2.5rem}
+  .testi-grid{grid-template-columns:1fr}
+  .cta-band{flex-direction:column;align-items:flex-start;padding:4rem 2rem}
+  .p-hero{padding:7rem 2rem 3rem}
+  .p-hero-stats{position:static;flex-direction:row;flex-wrap:wrap;gap:1.5rem;text-align:left;margin-top:2rem}
+  .filter-bar{padding:1rem 2rem;top:60px}
+  .portfolio-section,.reel-section,.testi-section{padding:4rem 2rem}
+}
+@media(max-width:640px){
+  .pf-grid{grid-template-columns:1fr}
+  .p-hero-title{font-size:2.6rem}
+}
+</style>
+</head>
+<body>
+
+<div class="tl-rail"></div>
+<div class="tl-scrub"></div>
+
+<!-- CART DRAWER (shared) -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head"><div class="cart-head-title">Your Cart</div><button class="cart-close" onclick="closeCart()" data-cursor="link">✕ Close</button></div>
+  <div class="cart-items" id="cartItems"><div class="cart-empty" id="cartEmpty"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="6" y="14" width="28" height="22" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M14 14v-4a6 6 0 0 1 12 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><p>Cart is empty</p></div></div>
+  <div class="cart-foot">
+    <div class="cart-total-row"><div class="cart-total-label">Total</div><div class="cart-total-price" id="cartTotal">$0</div></div>
+    <button class="cart-checkout-btn" onclick="window.location.href='index.html#payment'" data-cursor="link">Proceed to Checkout →</button>
+    <button class="cart-continue" onclick="closeCart()" data-cursor="link">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo" data-cursor="link">nhajuly<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="courses.html" data-cursor="link">Courses</a></li>
+    <li><a href="store.html" data-cursor="link">Store</a></li>
+    <li><a href="portfolio.html" data-cursor="link" style="color:var(--accent)">Portfolio</a></li>
+    <li><a href="index.html#about" data-cursor="link">About</a></li>
+    <li><a href="checkout.html" data-cursor="link">Enroll</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-btn" id="themeBtn" data-cursor="link"><span id="themeIcon">☽</span><span id="themeLabel" class="theme-label">Light</span></button>
+    <button class="cart-btn" id="cartBtn" onclick="openCart()" data-cursor="link">
+      <svg class="cart-icon" viewBox="0 0 20 20" fill="none"><path d="M3 3h2l2.5 9h8l2-6H6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="16" r="1.2" fill="currentColor"/><circle cx="14" cy="16" r="1.2" fill="currentColor"/></svg>
+      Cart<div class="cart-count" id="cartCount">0</div>
+    </button>
+    <a href="checkout.html" class="nav-cta" data-cursor="link">Hire Me</a>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- MOBILE OVERLAY -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-head">
+    <div class="mobile-menu-logo">nhajuly<span>.</span></div>
+    <button class="mobile-close" id="mobileClose">✕ Close</button>
+  </div>
+  <div class="mobile-menu-links">
+    <a href="index.html">Home</a>
+    <a href="courses.html">Courses</a>
+    <a href="store.html">Store</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="checkout.html">Checkout</a>
+  </div>
+  <div class="mobile-menu-foot">
+    <button class="theme-btn" onclick="document.getElementById('themeBtn').click()" style="width:100%;justify-content:center"><span id="mobileThemeIcon">☽</span> Toggle Theme</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="p-hero">
+  <div class="p-hero-stats">
+    <div><div class="p-hs-num">100+</div><div class="p-hs-lbl">Projects</div></div>
+    <div><div class="p-hs-num" style="color:var(--purple)">7+</div><div class="p-hs-lbl">Brands</div></div>
+    <div><div class="p-hs-num" style="color:var(--orange)">US+EU</div><div class="p-hs-lbl">Agencies</div></div>
+  </div>
+  <div class="p-hero-tag">Work by Panha Lory (nhajuly)</div>
+  <h1 class="p-hero-title">Selected<br/><em>Work.</em></h1>
+  <p class="p-hero-sub">From esports channels to brand campaigns — editing, motion, and color work built to hold attention and drive results.</p>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterWork('all')" data-cursor="link">All Work</button>
+  <button class="filter-btn" onclick="filterWork('color')" data-cursor="link">Color Grading</button>
+  <button class="filter-btn" onclick="filterWork('motion')" data-cursor="link">Motion Graphics</button>
+  <button class="filter-btn" onclick="filterWork('edit')" data-cursor="link">Video Editing</button>
+  <button class="filter-btn" onclick="filterWork('brand')" data-cursor="link">Brand Content</button>
+</div>
+
+<!-- PORTFOLIO GRID -->
+<div class="portfolio-section">
+  <div class="pf-grid" id="pfGrid">
+
+    <!-- FEATURED: Asus Campaign -->
+    <div class="pf-card featured" data-cat="brand" data-cursor="play">
+      <div class="pf-thumb bg-brand">
+        <img src="" alt="Asus ROG Campaign" onload="this.classList.add('loaded')"/>
+        <div class="pf-thumb-ph">Asus · ROG</div>
+        <div class="pf-ov"><div class="pf-play"></div></div>
+        <div class="pf-meta"><div class="pf-meta-cat">Brand Content</div><div class="pf-meta-client">Asus ROG · Product Launch</div></div>
+      </div>
+      <div class="pf-body">
+        <div class="pf-cat">Brand Content · Featured</div>
+        <div class="pf-title">Asus ROG — Product Launch Campaign</div>
+        <div class="pf-desc">Full campaign edit for Asus ROG product launch. Fast-paced cuts, motion overlays, and cinematic color grade optimized for YouTube and social distribution.</div>
+        <div class="pf-tags"><div class="pf-tag">Premiere Pro</div><div class="pf-tag">After Effects</div><div class="pf-tag">Color Grading</div><div class="pf-tag">Motion Graphics</div></div>
+      </div>
+      <div class="pf-bar" style="background:var(--orange)"></div>
+    </div>
+
+    <!-- MSI -->
+    <div class="pf-card" data-cat="brand" data-cursor="play">
+      <div class="pf-thumb bg-brand">
+        <img src="" alt="MSI Gaming" onload="this.classList.add('loaded')"/>
+        <div class="pf-thumb-ph">MSI</div>
+        <div class="pf-ov"><div class="pf-play"></div></div>
+        <div class="pf-meta"><div class="pf-meta-cat">Brand Content</div><div class="pf-meta-client">MSI Gaming</div></div>
+      </div>
+      <div class="pf-body">
+        <div class="pf-cat">Brand Content</div>
+        <div class="pf-title">MSI Gaming — Laptop Series Edit</div>
+        <div class="pf-desc">Product highlight reel with dynamic transitions and motion text overlays.</div>
+        <div class="pf-tags"><div class="pf-tag">Premiere Pro</div><div class="pf-tag">Motion Graphics</div></div>
+      </div>
+      <div class="pf-bar" style="background:var(--orange)"></div>
+    </div>
+
+    <!-- Color Grading Showreel -->
+    <div class="pf-card" data-cat="color" data-cursor="play">
+      <div class="pf-thumb bg-color">
+        <img src="" alt="Color Grading Reel" onload="this.classList.add('loaded')"/>
+        <div class="pf-thumb-ph">Color · DR</div>
+        <div class="pf-ov"><div class="pf-play"></div></div>
+        <div class="pf-meta"><div class="pf-meta-cat">Color Grading</div><div class="pf-meta-client">DaVinci Resolve Showreel</div></div>
+      </div>
+      <div class="pf-body">
+        <div class="pf-cat">Color Grading</div>
+        <div class="pf-title">Cinematic Color Grading Showreel</div>
+        <div class="pf-desc">A collection of color grades across commercial, documentary, and YouTube content. Shot in flat log, graded in DaVinci Resolve.</div>
+        <div class="pf-tags"><div class="pf-tag">DaVinci Resolve</div><div class="pf-tag">LUT Design</div><div class="pf-tag">Log Footage</div></div>
+      </div>
+      <div class="pf-bar" style="background:var(--blue)"></div>
+    </div>
+
+    <!-- Ream Angkor Esports -->
+    <div class="pf-card" data-cat="edit" data-cursor="play">
+      <div class="pf-thumb bg-edit">
+        <img src="" alt="Ream Angkor" onload="this.classList.add('loaded')"/>
+        <div class="pf-thumb-ph">Ream Angkor</div>
+        <div class="pf-ov"><div class="pf-play"></div></div>
+        <div class="pf-meta"><div class="pf-meta-cat">Video Editing</div><div class="pf-meta-client">Ream Angkor · Esports</div></div>
+      </div>
+      <div class="pf-body">
+        <div class="pf-cat">Video Editing · Esports</div>
+        <div class="pf-title">Ream Angkor — YouTube Growth Edit</div>
+        <div class="pf-desc">Helped grow the channel 40%+ in subscribers with retention-focused editing, stronger hooks, and pacing overhauls.</div>
+        <div class="pf-tags"><div class="pf-tag">Premiere Pro</div><div class="pf-tag">Retention Editing</div><div class="pf-tag">YouTube</div></div>
+      </div>
+      <div class="pf-bar" style="background:var(--accent)"></div>
+    </div>
+
+    <!-- Sony Viber Motion -->
+    <div class="pf-card" data-cat="motion" data-cursor="play">
+      <div class="pf-thumb bg-motion">
+        <img src="" alt="Motion Graphics" onload="this.classList.add('loaded')"/>
+        <div class="pf-thumb-ph">Motion · AE</div>
+        <div class="pf-ov"><div class="pf-play"></div></div>
+        <div class="pf-meta"><div class="pf-meta-cat">Motion Graphics</div><div class="pf-meta-client">Viber · App Campaign</div></div>
+      </div>
+      <div class="pf-body">
+        <div class="pf-cat">Motion Graphics</div>
+        <div class="pf-title">Viber — App Feature Motion Package</div>
+        <div class="pf-desc">Animated explainer and feature highlight reels for Viber's regional campaign. Built in After Effects with custom motion design system.</div>
+        <div class="pf-tags"><div class="pf-tag">After Effects</div><div class="pf-tag">Motion Design</div><div class="pf-tag">UI Animation</div></div>
+      </div>
+      <div class="pf-bar" style="background:var(--purple)"></div>
+    </div>
+
+    <!-- Xiaomi -->
+    <div class="pf-card" data-cat="brand" data-cursor="play">
+      <div class="pf-thumb bg-brand">
+        <img src="" alt="Xiaomi" onload="this.classList.add('loaded')"/>
+        <div class="pf-thumb-ph">Xiaomi</div>
+        <div class="pf-ov"><div class="pf-play"></div></div>
+        <div class="pf-meta"><div class="pf-meta-cat">Brand Content</div><div class="pf-meta-client">Xiaomi SEA</div></div>
+      </div>
+      <div class="pf-body">
+        <div class="pf-cat">Brand Content</div>
+        <div class="pf-title">Xiaomi — SEA Product Series</div>
+        <div class="pf-desc">Multi-platform product content for Xiaomi Southeast Asia. Clean, modern editing with product-focused color treatment.</div>
+        <div class="pf-tags"><div class="pf-tag">Premiere Pro</div><div class="pf-tag">Color Grading</div><div class="pf-tag">Social Media</div></div>
+      </div>
+      <div class="pf-bar" style="background:var(--orange)"></div>
+    </div>
+
+    <!-- Team Max Esports -->
+    <div class="pf-card" data-cat="edit" data-cursor="play">
+      <div class="pf-thumb bg-edit">
+        <img src="" alt="Team Max" onload="this.classList.add('loaded')"/>
+        <div class="pf-thumb-ph">Team Max</div>
+        <div class="pf-ov"><div class="pf-play"></div></div>
+        <div class="pf-meta"><div class="pf-meta-cat">Video Editing</div><div class="pf-meta-client">Team Max Cambodia</div></div>
+      </div>
+      <div class="pf-body">
+        <div class="pf-cat">Video Editing</div>
+        <div class="pf-title">Team Max Cambodia — Esports Channel</div>
+        <div class="pf-desc">Long-form and short-form esports content, highlight edits, and tournament recap videos for one of Cambodia's top gaming channels.</div>
+        <div class="pf-tags"><div class="pf-tag">Premiere Pro</div><div class="pf-tag">Fast-Paced Edit</div><div class="pf-tag">YouTube</div></div>
+      </div>
+      <div class="pf-bar" style="background:var(--accent)"></div>
+    </div>
+
+    <!-- Transcend -->
+    <div class="pf-card" data-cat="brand" data-cursor="play">
+      <div class="pf-thumb bg-brand">
+        <img src="" alt="Transcend" onload="this.classList.add('loaded')"/>
+        <div class="pf-thumb-ph">Transcend</div>
+        <div class="pf-ov"><div class="pf-play"></div></div>
+        <div class="pf-meta"><div class="pf-meta-cat">Brand Content</div><div class="pf-meta-client">Transcend</div></div>
+      </div>
+      <div class="pf-body">
+        <div class="pf-cat">Brand Content</div>
+        <div class="pf-title">Transcend — Storage Product Campaign</div>
+        <div class="pf-desc">Product showcase videos for Transcend storage drives. Minimal motion graphics with lifestyle footage integration.</div>
+        <div class="pf-tags"><div class="pf-tag">After Effects</div><div class="pf-tag">Motion Graphics</div><div class="pf-tag">Product Video</div></div>
+      </div>
+      <div class="pf-bar" style="background:var(--orange)"></div>
+    </div>
+
+    <!-- Upwork / Freelance Highlight -->
+    <div class="pf-card" data-cat="edit" data-cursor="play">
+      <div class="pf-thumb bg-color">
+        <img src="" alt="Upwork Freelance Work" onload="this.classList.add('loaded')"/>
+        <div class="pf-thumb-ph">Upwork · $10K+</div>
+        <div class="pf-ov"><div class="pf-play"></div></div>
+        <div class="pf-meta"><div class="pf-meta-cat">Freelance · US & Europe</div><div class="pf-meta-client">Upwork Agency Work</div></div>
+      </div>
+      <div class="pf-body">
+        <div class="pf-cat">Freelance · US & Europe</div>
+        <div class="pf-title">Upwork — $10K+ Agency Collaborations</div>
+        <div class="pf-desc">Ongoing work with US and European agencies — brand videos, documentary edits, corporate content, and YouTube channel management for international clients.</div>
+        <div class="pf-tags"><div class="pf-tag">All Tools</div><div class="pf-tag">US Clients</div><div class="pf-tag">EU Clients</div><div class="pf-tag">Agency Work</div></div>
+      </div>
+      <div class="pf-bar" style="background:var(--blue)"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SHOWREEL SECTION -->
+<div class="reel-section">
+  <div class="reel-inner">
+    <div>
+      <div class="eyebrow"><span class="n">Showreel /</span> 2024–2025</div>
+      <h2 class="reel-title">The Full <em>Picture.</em></h2>
+      <p class="reel-body">Five years of editing compressed into two minutes. Every cut, grade, and motion piece chosen for how it holds attention — not just how it looks.</p>
+      <div class="reel-list">
+        <div class="reel-item"><div class="reel-dot"></div><span>Commercial & brand content for 7+ major brands</span></div>
+        <div class="reel-item"><div class="reel-dot"></div><span>YouTube channel growth — 40%+ subscriber increases</span></div>
+        <div class="reel-item"><div class="reel-dot" style="background:var(--purple)"></div><span>Motion graphics & animated explainer videos</span></div>
+        <div class="reel-item"><div class="reel-dot" style="background:var(--orange)"></div><span>International agency work — US & Europe</span></div>
+      </div>
+      <a href="checkout.html" class="btn-primary" data-cursor="link">Work With Me</a>
+    </div>
+    <div class="reel-video" data-cursor="play">
+      <div class="reel-scan"></div>
+      <div class="reel-play"></div>
+      <div class="reel-label">nhajuly_showreel_2025.mp4</div>
+      <div class="reel-tl"><div class="reel-tl-prog"></div></div>
+      <div class="reel-grid-info">2:14 · 4K</div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="testi-section">
+  <div class="eyebrow"><span class="n">05 /</span> Client Feedback</div>
+  <h2 class="sec-title">What Clients Say</h2>
+  <div class="testi-grid">
+    <div class="testi-card" data-cursor="grab">
+      <div class="testi-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+      <div class="testi-quote">"Panha is incredibly fast, his edits are clean and he always nails the vibe on the first or second revision. One of my go-to editors for YouTube content."</div>
+      <div class="testi-sep"></div>
+      <div class="testi-name">Alex R.</div>
+      <div class="testi-role">YouTube Creator · US-based</div>
+      <div class="testi-platform">Upwork</div>
+    </div>
+    <div class="testi-card" data-cursor="grab">
+      <div class="testi-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+      <div class="testi-quote">"Excellent motion graphics work. Delivered a full animated explainer package well ahead of deadline. Will definitely hire again for our next campaign."</div>
+      <div class="testi-sep"></div>
+      <div class="testi-name">Sophie L.</div>
+      <div class="testi-role">Marketing Director · EU Agency</div>
+      <div class="testi-platform">Upwork</div>
+    </div>
+    <div class="testi-card" data-cursor="grab">
+      <div class="testi-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+      <div class="testi-quote">"The color grade was exactly what I was going for — cinematic but not overdone. He understood the aesthetic immediately without much direction."</div>
+      <div class="testi-sep"></div>
+      <div class="testi-name">Marcus T.</div>
+      <div class="testi-role">Filmmaker · Independent</div>
+      <div class="testi-platform">Fiverr</div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <div class="cta-text">
+    <h2>Let's Build Something <em>Great.</em></h2>
+    <p>Available for freelance projects, retainer work, and agency collaborations worldwide.</p>
+  </div>
+  <div class="cta-actions">
+    <a href="checkout.html" class="btn-primary" data-cursor="link">Start a Project</a>
+    <a href="courses.html" class="btn-ghost" data-cursor="link">Browse Courses</a>
+  </div>
+</div>
+
+<footer>
+  <div class="fl">nhajuly<span>.</span></div>
+  <div class="fc">© 2025 Panha Lory · All rights reserved.</div>
+  <div class="flinks">
+    <a href="index.html" data-cursor="link">Home</a>
+    <a href="store.html" data-cursor="link">Store</a>
+    <a href="#" data-cursor="link">Contact</a>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+/* FILTER */
+function filterWork(cat){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.pf-card').forEach(c=>{
+    if(cat==='all'||c.dataset.cat===cat){c.classList.remove('hidden')}
+    else{c.classList.add('hidden')}
+  });
+}
+</script>
+</body>
+</html>

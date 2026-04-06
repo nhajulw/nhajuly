@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="nhajuly — Video editing courses & digital products by Panha Lory. $10K+ earned on Upwork."/>
+<title>nhajuly — Edit Like a Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+/* ── HERO ── */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;padding-top:4.5rem;position:relative;z-index:2}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:5rem 3rem 5rem 5rem}
+.hero-eyebrow{display:flex;align-items:center;gap:.6rem;font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;color:var(--text3);margin-bottom:2rem}
+.hero-eyebrow::before{content:'';width:18px;height:1px;background:var(--text3)}
+.hero-title{font-family:'Instrument Serif',serif;font-size:clamp(3rem,5.5vw,4.8rem);font-weight:400;line-height:1.02;letter-spacing:-.02em;color:var(--text);margin-bottom:1.5rem}
+.hero-title em{font-style:italic;color:var(--accent)}
+.hero-sub{font-size:.84rem;color:var(--text2);max-width:390px;line-height:1.88;margin-bottom:2.5rem;font-weight:300}
+.hero-btns{display:flex;gap:.7rem;flex-wrap:wrap}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)}
+.stat-num{font-family:'Instrument Serif',serif;font-size:1.8rem;font-weight:400;color:var(--accent);line-height:1;margin-bottom:.2rem}
+.stat-lbl{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase}
+/* Hero right: Gumlet video */
+.hero-right{display:flex;align-items:center;justify-content:center;position:relative;background:var(--bg2);border-left:1px solid var(--border);overflow:hidden}
+.hr-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:34px 34px}
+.video-player{width:84%;position:relative;z-index:2}
+.vp-bar{background:var(--surface);border:1px solid var(--border2);border-bottom:none;padding:.42rem .7rem;display:flex;align-items:center;gap:.42rem;border-radius:5px 5px 0 0}
+.vp-dot{width:7px;height:7px;border-radius:50%}
+.vp-dot.r{background:#d95252}.vp-dot.y{background:#c8a030}.vp-dot.g{background:#48a860}
+.vp-file{flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--text3)}
+.vp-screen{aspect-ratio:16/9;border:1px solid var(--border2);border-top:none;position:relative;overflow:hidden}
+.vp-screen iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+.vp-meta{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--text3);margin-top:.5rem;text-align:center}
+/* ── COURSES preview ── */
+.courses{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.c-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border)}
+.c-card{background:var(--bg2);position:relative;overflow:hidden;transition:background .22s}
+.c-card:hover{background:var(--surface)}
+.c-thumb{aspect-ratio:16/9;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.th1{background:linear-gradient(135deg,#07101e,#0d1d30)}.th2{background:linear-gradient(135deg,#140808,#261010)}
+.th3{background:linear-gradient(135deg,#081410,#0e2218)}.th4{background:linear-gradient(135deg,#110818,#1e1028)}
+.th-label{font-family:'Instrument Serif',serif;font-size:1.5rem;font-weight:400;font-style:italic;opacity:.16;letter-spacing:.02em}
+.th1 .th-label{color:#6ea0be}.th2 .th-label{color:#b88a60}.th3 .th-label{color:#82b5a0}.th4 .th-label{color:#9f7ec0}
+.c-ov{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0);transition:background .22s}
+.c-card:hover .c-ov{background:rgba(0,0,0,.22)}
+.c-ring{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.7);transition:opacity .22s,transform .22s}
+.c-card:hover .c-ring{opacity:1;transform:scale(1)}
+.c-ring::after{content:'';width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:10px solid white;margin-left:2px}
+.c-body{padding:.95rem 1.1rem}
+.c-app{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:.28rem}
+.c-name{font-family:'Instrument Serif',serif;font-size:.93rem;color:var(--text);line-height:1.3;margin-bottom:.55rem}
+.c-badges{display:flex;gap:.32rem;margin-bottom:.75rem;flex-wrap:wrap}
+.badge{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.05em;text-transform:uppercase;padding:.16rem .42rem}
+.b-stream{background:var(--accent-d);color:var(--accent);border:1px solid rgba(130,181,160,.18)}
+.b-hrs{background:var(--surface2);color:var(--text3);border:1px solid var(--border)}
+.c-foot{display:flex;align-items:center;justify-content:space-between}
+.c-price{font-family:'Instrument Serif',serif;font-size:1.05rem;color:var(--text)}
+.enroll-btn{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.09em;text-transform:uppercase;padding:.35rem .85rem;background:transparent;color:var(--accent);border:1px solid rgba(130,181,160,.3);transition:all .2s}
+.enroll-btn:hover{background:var(--accent);color:var(--bg)}
+.c-bar{position:absolute;bottom:0;left:0;right:0;height:1.5px;transform:scaleX(0);transform-origin:left;transition:transform .3s ease}
+.c-card:hover .c-bar{transform:scaleX(1)}
+.c-card:nth-child(1) .c-bar{background:var(--blue)}.c-card:nth-child(2) .c-bar{background:var(--orange)}
+.c-card:nth-child(3) .c-bar{background:var(--accent)}.c-card:nth-child(4) .c-bar{background:var(--purple)}
+.courses-cta{text-align:center;margin-top:2.5rem}
+/* ── STORE preview ── */
+.store{background:var(--bg)}
+.s-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.p-card{background:var(--bg);position:relative;overflow:hidden;transition:background .22s;display:flex;flex-direction:column}
+.p-card:hover{background:var(--surface)}
+.p-thumb{width:100%;aspect-ratio:16/9;background:var(--surface2);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border)}
+.p-thumb-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:1.2rem;font-style:italic;color:var(--text3);transition:opacity .2s}
+.pt1{background:linear-gradient(135deg,#0a1420,#0d2030)}.pt2{background:linear-gradient(135deg,#1a0a10,#2a1018)}.pt3{background:linear-gradient(135deg,#0a1810,#102818)}
+/* ── INSTRUCTIONS for adding product images ──
+   Replace src="" with your image URL or relative path, e.g.:
+     src="assets/images/lut-pack-thumb.jpg"
+   Images should be 16:9 ratio, min 800×450px.
+   Supported formats: jpg, png, webp.
+   The <img> already has onload="this.classList.add('loaded')" for fade-in.
+─────────────────────────────────────────────── */
+.p-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s}
+.p-thumb img.loaded{opacity:1}
+.p-card:hover .p-thumb-ph{opacity:.4}
+.p-thumb-overlay{position:absolute;inset:0;background:rgba(0,0,0,0);transition:background .22s}
+.p-card:hover .p-thumb-overlay{background:rgba(0,0,0,.1)}
+.p-thumb-badge{position:absolute;top:.5rem;left:.5rem;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.07em;text-transform:uppercase;padding:.18rem .5rem;background:var(--surface);color:var(--accent);border:1px solid rgba(130,181,160,.2)}
+.p-body{padding:1.3rem 1.4rem;flex:1;display:flex;flex-direction:column}
+.p-type{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:.32rem}
+.p-name{font-family:'Instrument Serif',serif;font-size:1.02rem;color:var(--text);margin-bottom:.42rem;line-height:1.25}
+.p-desc{font-size:.79rem;color:var(--text2);line-height:1.85;margin-bottom:1.4rem;font-weight:300;flex:1}
+.p-foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:.9rem}
+.p-price{font-family:'Instrument Serif',serif;font-size:1.1rem;color:var(--text)}
+.atc-btn{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.09em;text-transform:uppercase;padding:.35rem .85rem;background:transparent;color:var(--purple);border:1px solid rgba(159,126,192,.3);transition:all .2s}
+.atc-btn:hover{background:var(--purple);color:#fff}
+.atc-btn.added{background:var(--accent-d);color:var(--accent);border-color:var(--accent)}
+.store-cta{text-align:center;margin-top:2.5rem}
+/* ── ABOUT ── */
+.about{background:var(--bg);border-top:1px solid var(--border)}
+.ab-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.ab-name{font-family:'Instrument Serif',serif;font-size:clamp(2.2rem,3.8vw,3.1rem);font-weight:400;line-height:1.04;letter-spacing:-.02em;margin-bottom:.3rem}
+.ab-name em{font-style:italic;color:var(--accent)}
+.ab-aka{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text3);letter-spacing:.1em;margin-bottom:1.5rem}
+.ab-aka span{color:var(--accent)}
+.platform-stats{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1.5rem}
+.platform-card{padding:1rem 1.1rem;border:1px solid var(--border);background:var(--surface);position:relative;overflow:hidden;transition:border-color .2s}
+.platform-card:hover{border-color:var(--border2)}
+.platform-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.pc-upwork::before{background:#14a800}.pc-fiverr::before{background:#1dbf73}
+.pc-agency::before{background:var(--blue)}.pc-projects::before{background:var(--purple)}
+.plat-header{display:flex;align-items:center;gap:.4rem;margin-bottom:.4rem;min-height:20px}
+.plat-wordmark{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:400;letter-spacing:.04em}
+.plat-wordmark.upwork{color:#14a800}.plat-wordmark.fiverr{color:#1dbf73}
+.plat-wordmark.agency{color:var(--blue)}.plat-wordmark.projects{color:var(--purple)}
+.plat-num{font-family:'Instrument Serif',serif;font-size:1.6rem;font-weight:400;color:var(--text);line-height:1;margin-bottom:.15rem}
+.plat-lbl{font-size:.68rem;color:var(--text2);font-weight:300}
+.agency-note{padding:.8rem 1rem;border:1px solid var(--border);background:var(--surface);margin-bottom:1.5rem;display:flex;align-items:flex-start;gap:.7rem}
+.agency-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:.35rem}
+.agency-text{font-size:.78rem;color:var(--text2);line-height:1.7;font-weight:300}
+.agency-text strong{color:var(--blue);font-weight:400}
+.ab-bio{font-size:.82rem;color:var(--text2);line-height:1.9;font-weight:300;margin-bottom:1.3rem}
+.brands{display:flex;flex-wrap:wrap;gap:.32rem;margin-bottom:2rem}
+.b-chip{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.06em;text-transform:uppercase;padding:.2rem .56rem;border:1px solid var(--border2);color:var(--text3);transition:border-color .2s,color .2s}
+.b-chip:hover{border-color:var(--accent);color:var(--accent)}
+.sk-head{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:1.2rem}
+.sk-item{margin-bottom:.95rem}
+.sk-top{display:flex;justify-content:space-between;margin-bottom:.26rem}
+.sk-nm{font-size:.78rem;color:var(--text2);font-weight:300}
+.sk-pct{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--text3)}
+.sk-track{height:1.5px;background:var(--surface2)}
+.sk-fill{height:100%}
+.sk1{background:linear-gradient(90deg,var(--blue),var(--accent));width:95%}
+.sk2{background:linear-gradient(90deg,var(--accent),var(--purple));width:90%}
+.sk3{background:linear-gradient(90deg,var(--purple),var(--orange));width:84%}
+.sk4{background:linear-gradient(90deg,var(--orange),var(--blue));width:80%}
+.sk5{background:linear-gradient(90deg,var(--blue),var(--purple));width:76%}
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr}.hero-right{display:none}
+  .c-grid{grid-template-columns:1fr 1fr}.s-grid{grid-template-columns:1fr 1fr}
+  .ab-grid{grid-template-columns:1fr;gap:2.5rem}
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){.c-grid,.s-grid{grid-template-columns:1fr}.platform-stats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div class="tl-rail"></div>
+<div class="tl-scrub"></div>
+
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <div class="cart-head-title">Your Cart</div>
+    <button class="cart-close" onclick="closeCart()" data-cursor="link">✕ Close</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty" id="cartEmpty">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="6" y="14" width="28" height="22" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M14 14v-4a6 6 0 0 1 12 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <p>Cart is empty</p>
+    </div>
+  </div>
+  <div class="cart-foot">
+    <div class="cart-total-row">
+      <div class="cart-total-label">Total</div>
+      <div class="cart-total-price" id="cartTotal">$0</div>
+    </div>
+    <button class="cart-checkout-btn" onclick="window.location.href='checkout.html'" data-cursor="link">Proceed to Checkout →</button>
+    <button class="cart-continue" onclick="closeCart()" data-cursor="link">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo" data-cursor="link">nhajuly<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="courses.html" data-cursor="link">Courses</a></li>
+    <li><a href="store.html" data-cursor="link">Store</a></li>
+    <li><a href="portfolio.html" data-cursor="link">Portfolio</a></li>
+    <li><a href="#about" data-cursor="link">About</a></li>
+    <li><a href="checkout.html" data-cursor="link">Enroll</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-btn" id="themeBtn" data-cursor="link"><span id="themeIcon">☽</span><span id="themeLabel" class="theme-label">Light</span></button>
+    <button class="cart-btn" id="cartBtn" onclick="openCart()" data-cursor="link">
+      <svg class="cart-icon" viewBox="0 0 20 20" fill="none"><path d="M3 3h2l2.5 9h8l2-6H6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="16" r="1.2" fill="currentColor"/><circle cx="14" cy="16" r="1.2" fill="currentColor"/></svg>
+      Cart<div class="cart-count" id="cartCount">0</div>
+    </button>
+    <a href="courses.html" class="nav-cta" data-cursor="link">Start Learning</a>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- MOBILE OVERLAY -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-head">
+    <div class="mobile-menu-logo">nhajuly<span>.</span></div>
+    <button class="mobile-close" id="mobileClose">✕ Close</button>
+  </div>
+  <div class="mobile-menu-links">
+    <a href="courses.html">Courses</a>
+    <a href="store.html">Store</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="#about">About</a>
+    <a href="checkout.html">Checkout</a>
+  </div>
+  <div class="mobile-menu-foot">
+    <button class="theme-btn" onclick="document.getElementById('themeBtn').click()" style="width:100%;justify-content:center"><span id="mobileThemeIcon">☽</span> Toggle Theme</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Senior Video Editor · Motion Graphics · Phnom Penh</div>
+    <h1 class="hero-title">Edit.<br/><em>Color.</em><br/>Motion.</h1>
+    <p class="hero-sub">Courses built for storytelling and retention — by Panha Lory (nhajuly). No-fluff, hands-on, designed for creators who want real results.</p>
+    <div class="hero-btns">
+      <a href="courses.html" class="btn-primary" data-cursor="link">Browse Courses</a>
+      <a href="store.html" class="btn-ghost" data-cursor="link">View Store</a>
+      <a href="portfolio.html" class="btn-ghost" data-cursor="link">Portfolio ↗</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num">$10K+</div><div class="stat-lbl">Upwork Earned</div></div>
+      <div><div class="stat-num" style="color:var(--purple)">100+</div><div class="stat-lbl">Projects Done</div></div>
+      <div><div class="stat-num" style="color:var(--orange)">5yr</div><div class="stat-lbl">Experience</div></div>
+      <div><div class="stat-num" style="color:var(--blue)">4</div><div class="stat-lbl">Courses</div></div>
+    </div>
+  </div>
+  <div class="hero-right" data-cursor="grab">
+    <div class="hr-grid"></div>
+    <div class="video-player">
+      <div class="vp-bar">
+        <div class="vp-dot r"></div><div class="vp-dot y"></div><div class="vp-dot g"></div>
+        <div class="vp-file">nhajuly — intro reel</div>
+      </div>
+      <!-- ══ GUMLET VIDEO EMBED ══
+           This is the Gumlet player embed provided by the site owner.
+           No changes needed unless you want to swap the video ID in the src URL.
+           The iframe fills the .vp-screen container at 16:9 ratio.
+      ═══════════════════════════ -->
+      <div class="vp-screen">
+        <iframe
+          loading="lazy"
+          title="Gumlet video player"
+          src="https://play.gumlet.io/embed/69d2713d0b739ad84961aee8?background=false&autoplay=false&loop=false&disable_player_controls=false"
+          referrerpolicy="origin"
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write;">
+        </iframe>
+      </div>
+      <div class="vp-meta">Stream Only — No Download · nhajuly © 2025</div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="ab-grid">
+    <div>
+      <div class="eyebrow"><span class="n">01 /</span> About</div>
+      <h2 class="ab-name">Panha <em>Lory</em></h2>
+      <div class="ab-aka">also known as <span>nhajuly</span> · Phnom Penh, Cambodia</div>
+      <div class="platform-stats">
+        <div class="platform-card pc-upwork" data-cursor="grab">
+          <div class="plat-header"><span class="plat-wordmark upwork">Upwork</span></div>
+          <div class="plat-num">$10K+</div><div class="plat-lbl">Total Earned</div>
+        </div>
+        <div class="platform-card pc-fiverr" data-cursor="grab">
+          <div class="plat-header"><span class="plat-wordmark fiverr">Fiverr</span></div>
+          <div class="plat-num">Growing</div><div class="plat-lbl">& Rising Fast</div>
+        </div>
+        <div class="platform-card pc-agency" data-cursor="grab">
+          <div class="plat-header"><span class="plat-wordmark agency">Agencies</span></div>
+          <div class="plat-num">US + EU</div><div class="plat-lbl">Markets Served</div>
+        </div>
+        <div class="platform-card pc-projects" data-cursor="grab">
+          <div class="plat-header"><span class="plat-wordmark projects">Projects</span></div>
+          <div class="plat-num">100+</div><div class="plat-lbl">Total Delivered</div>
+        </div>
+      </div>
+      <div class="agency-note"><div class="agency-dot"></div><div class="agency-text">Actively working with <strong>multiple agencies across the US and Europe</strong> — delivering fast-turnaround edits, motion graphics, and branded content while based in Phnom Penh.</div></div>
+      <p class="ab-bio">Senior Video Editor & Motion Graphics Specialist with 5+ years crafting content that holds attention. Worked with major brands and YouTube channels across Southeast Asia — now teaching everything I know.</p>
+      <p class="ab-bio">Cinematic and minimal in style. Built on retention, storytelling, and repeatability. I don't just edit — I build systems that scale.</p>
+      <div class="brands"><div class="b-chip">Asus</div><div class="b-chip">MSI</div><div class="b-chip">Xiaomi</div><div class="b-chip">Dell</div><div class="b-chip">Sony</div><div class="b-chip">Viber</div><div class="b-chip">Transcend</div><div class="b-chip">Ream Angkor</div><div class="b-chip">Team Max Cambodia</div></div>
+    </div>
+    <div>
+      <div class="sk-head">// technical_skills</div>
+      <div class="sk-item"><div class="sk-top"><div class="sk-nm">Adobe Premiere Pro</div><div class="sk-pct">95%</div></div><div class="sk-track"><div class="sk-fill sk1"></div></div></div>
+      <div class="sk-item"><div class="sk-top"><div class="sk-nm">Adobe After Effects</div><div class="sk-pct">90%</div></div><div class="sk-track"><div class="sk-fill sk2"></div></div></div>
+      <div class="sk-item"><div class="sk-top"><div class="sk-nm">DaVinci Resolve</div><div class="sk-pct">84%</div></div><div class="sk-track"><div class="sk-fill sk3"></div></div></div>
+      <div class="sk-item"><div class="sk-top"><div class="sk-nm">CapCut</div><div class="sk-pct">80%</div></div><div class="sk-track"><div class="sk-fill sk4"></div></div></div>
+      <div class="sk-item"><div class="sk-top"><div class="sk-nm">Photoshop</div><div class="sk-pct">76%</div></div><div class="sk-track"><div class="sk-fill sk5"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fl">nhajuly<span>.</span></div>
+  <div class="fc">© 2025 Panha Lory · All rights reserved.</div>
+  <div class="flinks">
+    <a href="portfolio.html" data-cursor="link">Portfolio</a>
+    <a href="store.html" data-cursor="link">Store</a>
+    <a href="checkout.html" data-cursor="link">Contact</a>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+</body>
+</html>

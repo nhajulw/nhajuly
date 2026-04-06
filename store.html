@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="nhajuly Digital Store — LUT packs, Premiere templates, After Effects bundles by Panha Lory."/>
+<title>nhajuly — Digital Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+/* PAGE HERO */
+.p-hero{min-height:40vh;display:flex;flex-direction:column;justify-content:flex-end;padding:9rem 5rem 4rem;position:relative;z-index:2;border-bottom:1px solid var(--border);background:var(--bg2)}
+.p-hero-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:1.5rem;display:flex;align-items:center;gap:.6rem}
+.p-hero-tag::before{content:'';width:18px;height:1px;background:var(--text3)}
+.p-hero-title{font-family:'Instrument Serif',serif;font-size:clamp(3rem,6vw,5rem);font-weight:400;line-height:1;letter-spacing:-.03em;color:var(--text);margin-bottom:.8rem}
+.p-hero-title em{font-style:italic;color:var(--purple)}
+.p-hero-sub{font-size:.84rem;color:var(--text2);max-width:520px;line-height:1.88;font-weight:300}
+
+/* FILTER BAR */
+.filter-bar{padding:1.2rem 5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;position:sticky;top:64px;background:var(--nav-bg);backdrop-filter:blur(20px);z-index:100}
+.filter-btn{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:.35rem .9rem;background:transparent;color:var(--text3);border:1px solid var(--border2);transition:all .2s}
+.filter-btn:hover{color:var(--text2);border-color:var(--border)}
+.filter-btn.active{color:var(--purple);border-color:var(--purple);background:var(--purple-d)}
+
+/* STORE GRID */
+.store-section{padding:4rem 5rem;position:relative;z-index:2}
+.s-full-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+
+/* PRODUCT CARD */
+.p-card{background:var(--bg);position:relative;overflow:hidden;transition:background .22s;display:flex;flex-direction:column}
+.p-card:hover{background:var(--surface)}
+.p-card.hidden{display:none}
+.p-thumb{width:100%;aspect-ratio:16/9;background:var(--surface2);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border)}
+.pt1{background:linear-gradient(135deg,#0a1420,#0d2030)}
+.pt2{background:linear-gradient(135deg,#1a0a10,#2a1018)}
+.pt3{background:linear-gradient(135deg,#0a1810,#102818)}
+.pt4{background:linear-gradient(135deg,#100814,#1e1030)}
+.pt5{background:linear-gradient(135deg,#141008,#281e10)}
+.pt6{background:linear-gradient(135deg,#081418,#0e2030)}
+/*
+  ── PRODUCT THUMBNAIL IMAGES ──
+  For each product card, add an <img> inside the .p-thumb div:
+    <img src="images/PRODUCT-NAME.jpg"
+         alt="Product Name"
+         onload="this.classList.add('loaded')"
+         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s"/>
+  
+  Recommended specs: 480×270px (16:9), JPG or WebP, max 300KB each
+  File name suggestions:
+    images/lut-pack.jpg          → Cinematic LUT Pack
+    images/starter-kit.jpg       → YouTube Edit Starter Kit
+    images/motion-bundle.jpg     → Motion Graphics Bundle
+    images/davinci-luts.jpg      → DaVinci LUT Collection
+    images/transitions.jpg       → Transitions Pack
+    images/captions-kit.jpg      → Caption Animation Kit
+*/
+.p-thumb-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:1.2rem;font-style:italic;color:var(--text3);transition:opacity .2s}
+.p-card:hover .p-thumb-ph{opacity:.4}
+.p-thumb-overlay{position:absolute;inset:0;background:rgba(0,0,0,0);transition:background .22s}
+.p-card:hover .p-thumb-overlay{background:rgba(0,0,0,.1)}
+.p-thumb-badge{position:absolute;top:.5rem;left:.5rem;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.07em;text-transform:uppercase;padding:.18rem .5rem;background:var(--surface);color:var(--purple);border:1px solid rgba(159,126,192,.2)}
+.p-new-badge{position:absolute;top:.5rem;right:.5rem;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.07em;text-transform:uppercase;padding:.18rem .5rem;background:var(--accent-d);color:var(--accent);border:1px solid rgba(130,181,160,.2)}
+.p-body{padding:1.3rem 1.4rem;flex:1;display:flex;flex-direction:column}
+.p-type{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:.32rem}
+.p-name{font-family:'Instrument Serif',serif;font-size:1.02rem;color:var(--text);margin-bottom:.42rem;line-height:1.25}
+.p-desc{font-size:.79rem;color:var(--text2);line-height:1.85;margin-bottom:1.2rem;font-weight:300;flex:1}
+.p-includes{display:flex;flex-direction:column;gap:.22rem;margin-bottom:1.2rem}
+.p-inc-item{display:flex;align-items:center;gap:.45rem;font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--text3);letter-spacing:.04em}
+.p-inc-dot{width:3px;height:3px;border-radius:50%;background:var(--purple);flex-shrink:0}
+.p-foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:.9rem}
+.p-price{font-family:'Instrument Serif',serif;font-size:1.1rem;color:var(--text)}
+.atc-btn{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.09em;text-transform:uppercase;padding:.38rem .95rem;background:transparent;color:var(--purple);border:1px solid rgba(159,126,192,.3);transition:all .2s}
+.atc-btn:hover{background:var(--purple);color:#fff}
+.atc-btn.added{background:var(--accent-d);color:var(--accent);border-color:var(--accent)}
+.p-bar{position:absolute;bottom:0;left:0;right:0;height:1.5px;transform:scaleX(0);transform-origin:left;transition:transform .3s ease;background:var(--purple)}
+.p-card:hover .p-bar{transform:scaleX(1)}
+
+/* BUNDLE HIGHLIGHT */
+.bundle-band{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:4rem 5rem}
+.bundle-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.bundle-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:.7rem}
+.bundle-title{font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3vw,2.4rem);font-weight:400;letter-spacing:-.015em;margin-bottom:.6rem}
+.bundle-title em{font-style:italic;color:var(--purple)}
+.bundle-desc{font-size:.8rem;color:var(--text2);line-height:1.9;font-weight:300;margin-bottom:1.5rem}
+.bundle-items{display:flex;flex-direction:column;gap:.42rem;margin-bottom:1.8rem}
+.bundle-item{display:flex;align-items:center;justify-content:space-between;padding:.6rem .8rem;background:var(--surface);border:1px solid var(--border)}
+.bi-name{font-size:.78rem;color:var(--text)}
+.bi-price{font-family:'Instrument Serif',serif;font-size:.85rem;color:var(--text3);text-decoration:line-through}
+.bundle-pricing{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.5rem}
+.bundle-price{font-family:'Instrument Serif',serif;font-size:2.5rem;font-weight:400;color:var(--text)}
+.bundle-savings{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);padding:.25rem .6rem;background:var(--accent-d);border:1px solid rgba(130,181,160,.2)}
+.bundle-cta{display:flex;gap:.7rem}
+.bundle-visual{aspect-ratio:4/3;background:var(--bg);border:1px solid var(--border2);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.bv-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:30px 30px}
+.bv-label{position:relative;z-index:2;font-family:'Instrument Serif',serif;font-size:1.1rem;font-style:italic;color:var(--text3);opacity:.5}
+</style>
+</head>
+<body>
+
+<div class="tl-rail"></div><div class="tl-scrub"></div>
+
+<nav>
+  <a href="index.html" class="logo" data-cursor="link">nhajuly<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html" data-cursor="link">Home</a></li>
+    <li><a href="courses.html" data-cursor="link">Courses</a></li>
+    <li><a href="store.html" data-cursor="link">Store</a></li>
+    <li><a href="portfolio.html" data-cursor="link">Portfolio</a></li>
+    <li><a href="checkout.html" data-cursor="link">Checkout</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-btn" id="themeBtn" data-cursor="link"><span id="themeIcon">☽</span><span id="themeLabel" class="theme-label">Light</span></button>
+    <button class="cart-btn" onclick="openCart()" data-cursor="link">
+      <svg class="cart-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 1h2l2.4 9h7.2l1.4-6H4"/><circle cx="7" cy="13.5" r="1"/><circle cx="12" cy="13.5" r="1"/></svg>
+      Cart<span class="cart-count" id="cartCount">0</span>
+    </button>
+    <a href="checkout.html" class="nav-cta" data-cursor="link">Buy Now</a>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- MOBILE OVERLAY -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-head">
+    <div class="mobile-menu-logo">nhajuly<span>.</span></div>
+    <button class="mobile-close" id="mobileClose">✕ Close</button>
+  </div>
+  <div class="mobile-menu-links">
+    <a href="index.html">Home</a>
+    <a href="courses.html">Courses</a>
+    <a href="store.html">Store</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="checkout.html">Checkout</a>
+  </div>
+  <div class="mobile-menu-foot">
+    <button class="theme-btn" onclick="document.getElementById('themeBtn').click()" style="width:100%;justify-content:center"><span id="mobileThemeIcon">☽</span> Toggle Theme</button>
+  </div>
+</div>
+
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head"><div class="cart-head-title">Your Cart</div><button class="cart-close" onclick="closeCart()" data-cursor="link">✕ Close</button></div>
+  <div class="cart-items" id="cartItems"><div class="cart-empty" id="cartEmpty"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1"><path d="M4 4h5l4.8 18h14.4l2.8-12H9"/><circle cx="14" cy="27" r="2"/><circle cx="24" cy="27" r="2"/></svg><p>Cart is empty</p></div></div>
+  <div class="cart-foot"><div class="cart-total-row"><div class="cart-total-label">Total</div><div class="cart-total-price" id="cartTotal">$0</div></div><button class="cart-checkout-btn" onclick="window.location.href='checkout.html'" data-cursor="link">Checkout →</button><button class="cart-continue" onclick="closeCart()" data-cursor="link">Continue Shopping</button></div>
+</div>
+
+<!-- PAGE HERO -->
+<div class="p-hero">
+  <div class="p-hero-tag">nhajuly · Digital Store</div>
+  <h1 class="p-hero-title">Edit Faster.<br><em>Look Better.</em></h1>
+  <p class="p-hero-sub">Hand-crafted presets, templates, and asset packs. Built from real client projects — not generic presets made for demos.</p>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterStore('all',this)" data-cursor="link">All Products</button>
+  <button class="filter-btn" onclick="filterStore('lut',this)" data-cursor="link">LUT Packs</button>
+  <button class="filter-btn" onclick="filterStore('template',this)" data-cursor="link">Templates</button>
+  <button class="filter-btn" onclick="filterStore('ae',this)" data-cursor="link">After Effects</button>
+  <button class="filter-btn" onclick="filterStore('caption',this)" data-cursor="link">Captions</button>
+</div>
+
+<!-- PRODUCT GRID -->
+<div class="store-section">
+  <div class="s-full-grid">
+
+    <!-- Product 1 -->
+    <div class="p-card" data-cat="lut" data-cursor="buy">
+      <div class="p-thumb pt1">
+        <!--
+          ── PRODUCT IMAGE: Cinematic LUT Pack ──
+          Add your preview image here:
+          <img src="images/lut-pack.jpg" alt="Cinematic Color Grading Pack" onload="this.classList.add('loaded')"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s"/>
+          Specs: 480×270px (16:9), JPG/WebP, max 300KB
+        -->
+        <div class="p-thumb-ph">LUTs</div>
+        <div class="p-thumb-overlay"></div>
+        <div class="p-thumb-badge">LUT Pack</div>
+      </div>
+      <div class="p-body">
+        <div class="p-type">Color Grading</div>
+        <div class="p-name">Cinematic Color Grading Pack</div>
+        <div class="p-desc">25 hand-crafted LUTs for DaVinci Resolve & Premiere Pro. From warm film looks to cold commercial grades.</div>
+        <div class="p-includes">
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>25 .cube LUT files</span></div>
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>Works in Premiere, Resolve, FCPX</span></div>
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>Usage guide PDF included</span></div>
+        </div>
+        <div class="p-foot"><div class="p-price">$19</div><button class="atc-btn" data-cursor="buy" onclick="addToCart('Cinematic LUT Pack','LUT Pack',19,this)" data-product-name="Cinematic LUT Pack">Add to Cart</button></div>
+      </div>
+      <div class="p-bar"></div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="p-card" data-cat="template" data-cursor="buy">
+      <div class="p-thumb pt2">
+        <!--
+          ── PRODUCT IMAGE: YouTube Edit Starter Kit ──
+          <img src="images/starter-kit.jpg" alt="YouTube Edit Starter Kit" onload="this.classList.add('loaded')"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s"/>
+        -->
+        <div class="p-thumb-ph">Starter</div>
+        <div class="p-thumb-overlay"></div>
+        <div class="p-thumb-badge">Template</div>
+        <div class="p-new-badge">Bestseller</div>
+      </div>
+      <div class="p-body">
+        <div class="p-type">Premiere Pro Template</div>
+        <div class="p-name">YouTube Edit Starter Kit</div>
+        <div class="p-desc">Pre-built sequences, caption layers, sound design slots, and hook structures. Drop your footage and go.</div>
+        <div class="p-includes">
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>6 fully-built sequence templates</span></div>
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>Auto-reframe & multi-platform export presets</span></div>
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>Sound design layer structure included</span></div>
+        </div>
+        <div class="p-foot"><div class="p-price">$29</div><button class="atc-btn" data-cursor="buy" onclick="addToCart('YouTube Edit Starter Kit','Template',29,this)" data-product-name="YouTube Edit Starter Kit">Add to Cart</button></div>
+      </div>
+      <div class="p-bar"></div>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="p-card" data-cat="ae" data-cursor="buy">
+      <div class="p-thumb pt3">
+        <!--
+          ── PRODUCT IMAGE: Motion Graphics Bundle ──
+          <img src="images/motion-bundle.jpg" alt="Motion Graphics Bundle" onload="this.classList.add('loaded')"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s"/>
+        -->
+        <div class="p-thumb-ph">Motion</div>
+        <div class="p-thumb-overlay"></div>
+        <div class="p-thumb-badge">After Effects</div>
+      </div>
+      <div class="p-body">
+        <div class="p-type">After Effects Bundle</div>
+        <div class="p-name">Motion Graphics Bundle</div>
+        <div class="p-desc">50+ animated elements — titles, lower thirds, transitions, and overlays. Minimal, retention-first design language.</div>
+        <div class="p-includes">
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>50+ .mogrt and .aep files</span></div>
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>Fully editable text & colors</span></div>
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>Usable in Premiere via Essential Graphics</span></div>
+        </div>
+        <div class="p-foot"><div class="p-price">$39</div><button class="atc-btn" data-cursor="buy" onclick="addToCart('Motion Graphics Bundle','AE Bundle',39,this)" data-product-name="Motion Graphics Bundle">Add to Cart</button></div>
+      </div>
+      <div class="p-bar"></div>
+    </div>
+
+    <!-- Product 4 -->
+    <div class="p-card" data-cat="lut" data-cursor="buy">
+      <div class="p-thumb pt4">
+        <!--
+          ── PRODUCT IMAGE: DaVinci LUT Collection ──
+          <img src="images/davinci-luts.jpg" alt="DaVinci LUT Collection" onload="this.classList.add('loaded')"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s"/>
+        -->
+        <div class="p-thumb-ph">DaVinci</div>
+        <div class="p-thumb-overlay"></div>
+        <div class="p-thumb-badge">LUT Pack</div>
+        <div class="p-new-badge">New</div>
+      </div>
+      <div class="p-body">
+        <div class="p-type">Color Grading · DaVinci</div>
+        <div class="p-name">DaVinci Resolve LUT Collection</div>
+        <div class="p-desc">15 Resolve-optimized LUTs built for BRAW and Cinema DNG. Designed for the color science inside DaVinci's node tree.</div>
+        <div class="p-includes">
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>15 .cube LUT files, Resolve-tuned</span></div>
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>Node structure reference guide</span></div>
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>BRAW & Cinema DNG optimized</span></div>
+        </div>
+        <div class="p-foot"><div class="p-price">$24</div><button class="atc-btn" data-cursor="buy" onclick="addToCart('DaVinci LUT Collection','LUT Pack',24,this)" data-product-name="DaVinci LUT Collection">Add to Cart</button></div>
+      </div>
+      <div class="p-bar"></div>
+    </div>
+
+    <!-- Product 5 -->
+    <div class="p-card" data-cat="template" data-cursor="buy">
+      <div class="p-thumb pt5">
+        <!--
+          ── PRODUCT IMAGE: Transitions Pack ──
+          <img src="images/transitions.jpg" alt="Premiere Transitions Pack" onload="this.classList.add('loaded')"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s"/>
+        -->
+        <div class="p-thumb-ph">Transitions</div>
+        <div class="p-thumb-overlay"></div>
+        <div class="p-thumb-badge">Template</div>
+      </div>
+      <div class="p-body">
+        <div class="p-type">Premiere Pro Template</div>
+        <div class="p-name">Seamless Transitions Pack</div>
+        <div class="p-desc">35 drag-and-drop transitions for Premiere Pro. Whips, zooms, glitches, lumas, and smooth cuts — all GPU-accelerated.</div>
+        <div class="p-includes">
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>35 .prfpset transition presets</span></div>
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>Tutorial video on installation</span></div>
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>Compatible with Premiere Pro CC 2020+</span></div>
+        </div>
+        <div class="p-foot"><div class="p-price">$22</div><button class="atc-btn" data-cursor="buy" onclick="addToCart('Seamless Transitions Pack','Template',22,this)" data-product-name="Seamless Transitions Pack">Add to Cart</button></div>
+      </div>
+      <div class="p-bar"></div>
+    </div>
+
+    <!-- Product 6 -->
+    <div class="p-card" data-cat="caption" data-cursor="buy">
+      <div class="p-thumb pt6">
+        <!--
+          ── PRODUCT IMAGE: Caption Animation Kit ──
+          <img src="images/captions-kit.jpg" alt="Caption Animation Kit" onload="this.classList.add('loaded')"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s"/>
+        -->
+        <div class="p-thumb-ph">Captions</div>
+        <div class="p-thumb-overlay"></div>
+        <div class="p-thumb-badge">After Effects</div>
+        <div class="p-new-badge">New</div>
+      </div>
+      <div class="p-body">
+        <div class="p-type">After Effects · Captions</div>
+        <div class="p-name">Caption Animation Kit</div>
+        <div class="p-desc">20 animated caption styles built for shorts and long-form. Word-by-word highlighting, emoji support, customizable fonts.</div>
+        <div class="p-includes">
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>20 caption animation presets</span></div>
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>Word-level highlight control</span></div>
+          <div class="p-inc-item"><div class="p-inc-dot"></div><span>Works via .mogrt in Premiere Pro</span></div>
+        </div>
+        <div class="p-foot"><div class="p-price">$18</div><button class="atc-btn" data-cursor="buy" onclick="addToCart('Caption Animation Kit','AE Captions',18,this)" data-product-name="Caption Animation Kit">Add to Cart</button></div>
+      </div>
+      <div class="p-bar"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BUNDLE HIGHLIGHT -->
+<div class="bundle-band">
+  <div class="bundle-inner">
+    <div>
+      <div class="bundle-tag">// Bundle Deal</div>
+      <h2 class="bundle-title">The Complete <em>Creator Pack</em></h2>
+      <p class="bundle-desc">Everything in the store. All 6 products at a flat rate — for editors who want the full toolkit without doing math.</p>
+      <div class="bundle-items">
+        <div class="bundle-item"><span class="bi-name">Cinematic LUT Pack</span><span class="bi-price">$19</span></div>
+        <div class="bundle-item"><span class="bi-name">YouTube Edit Starter Kit</span><span class="bi-price">$29</span></div>
+        <div class="bundle-item"><span class="bi-name">Motion Graphics Bundle</span><span class="bi-price">$39</span></div>
+        <div class="bundle-item"><span class="bi-name">DaVinci LUT Collection</span><span class="bi-price">$24</span></div>
+        <div class="bundle-item"><span class="bi-name">Seamless Transitions Pack</span><span class="bi-price">$22</span></div>
+        <div class="bundle-item"><span class="bi-name">Caption Animation Kit</span><span class="bi-price">$18</span></div>
+      </div>
+      <div class="bundle-pricing">
+        <div class="bundle-price">$99</div>
+        <div class="bundle-savings">Save $52</div>
+      </div>
+      <div class="bundle-cta">
+        <button class="btn-primary" data-cursor="buy" onclick="addBundle()">Get the Bundle</button>
+        <a href="checkout.html" class="btn-ghost" data-cursor="link">Go to Checkout</a>
+      </div>
+    </div>
+    <div class="bundle-visual" data-cursor="grab">
+      <div class="bv-grid"></div>
+      <!--
+        ── BUNDLE VISUAL ──
+        Replace this placeholder with a bundle preview image or composite:
+        <img src="images/bundle-preview.jpg" alt="Complete Creator Pack" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.7"/>
+        Recommended: 800×600px, JPG/WebP, max 500KB
+      -->
+      <div class="bv-label">Complete Creator Pack</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="fl">nhajuly<span>.</span></div>
+  <div class="fc">© 2025 Panha Lory · All rights reserved.</div>
+  <div class="flinks">
+    <a href="index.html" data-cursor="link">Home</a>
+    <a href="courses.html" data-cursor="link">Courses</a>
+    <a href="checkout.html" data-cursor="link">Checkout</a>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+/* Filter */
+function filterStore(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.p-card').forEach(function(c){
+    if (cat === 'all' || c.dataset.cat === cat) c.classList.remove('hidden');
+    else c.classList.add('hidden');
+  });
+}
+
+/* Bundle — adds all 6 products */
+function addBundle() {
+  var items = [
+    { name:'Cinematic LUT Pack',        type:'LUT Pack',    price:19 },
+    { name:'YouTube Edit Starter Kit',  type:'Template',    price:29 },
+    { name:'Motion Graphics Bundle',    type:'AE Bundle',   price:39 },
+    { name:'DaVinci LUT Collection',    type:'LUT Pack',    price:24 },
+    { name:'Seamless Transitions Pack', type:'Template',    price:22 },
+    { name:'Caption Animation Kit',     type:'AE Captions', price:18 }
+  ];
+  items.forEach(function(item) {
+    if (!window._cart.find(function(i){ return i.name === item.name; })) {
+      window._cart.push({ name:item.name, type:item.type, price:item.price, id:Date.now() + Math.random() });
+    }
+  });
+  var s = window.localStorage;
+  s.setItem('nhajuly-cart', JSON.stringify(window._cart));
+  window.renderCart();
+  window.syncAllButtons();
+  window.openCart();
+}
+</script>
+</body>
+</html>

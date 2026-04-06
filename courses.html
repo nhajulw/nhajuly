@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="nhajuly Courses — Deep-dive video editing courses by Panha Lory. Premiere Pro, After Effects, DaVinci Resolve, CapCut."/>
+<title>nhajuly — Courses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+/* ── PAGE HERO ── */
+.p-hero{min-height:46vh;display:flex;flex-direction:column;justify-content:flex-end;padding:9rem 5rem 4rem;position:relative;z-index:2;border-bottom:1px solid var(--border);background:var(--bg2)}
+.p-hero-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:1.5rem;display:flex;align-items:center;gap:.6rem}
+.p-hero-tag::before{content:'';width:18px;height:1px;background:var(--text3)}
+.p-hero-title{font-family:'Instrument Serif',serif;font-size:clamp(3rem,6vw,5rem);font-weight:400;line-height:1;letter-spacing:-.03em;color:var(--text);margin-bottom:.8rem}
+.p-hero-title em{font-style:italic;color:var(--accent)}
+.p-hero-sub{font-size:.84rem;color:var(--text2);max-width:520px;line-height:1.88;font-weight:300}
+.p-hero-stats{position:absolute;top:7rem;right:5rem;display:flex;flex-direction:column;gap:1.2rem;text-align:right}
+.p-hs-num{font-family:'Instrument Serif',serif;font-size:2rem;font-weight:400;color:var(--accent);line-height:1}
+.p-hs-lbl{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase}
+
+/* ── FILTER BAR ── */
+.filter-bar{padding:1.2rem 5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;position:sticky;top:64px;background:var(--nav-bg);backdrop-filter:blur(20px);z-index:100}
+.filter-btn{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:.35rem .9rem;background:transparent;color:var(--text3);border:1px solid var(--border2);transition:all .2s}
+.filter-btn:hover{color:var(--text2);border-color:var(--border)}
+.filter-btn.active{color:var(--accent);border-color:var(--accent);background:var(--accent-d)}
+
+/* ── COURSE GRID ── */
+.courses-section{padding:4rem 5rem;position:relative;z-index:2}
+.c-full-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border)}
+
+/* ── COURSE CARD (expanded) ── */
+.cc-card{background:var(--bg);position:relative;overflow:hidden;transition:background .22s;display:flex;flex-direction:column}
+.cc-card:hover{background:var(--surface)}
+.cc-card.hidden{display:none}
+
+.cc-thumb{aspect-ratio:16/9;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cc-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s}
+.cc-thumb img.loaded{opacity:1}
+.cc-card:hover .cc-thumb img{transform:scale(1.03)}
+
+/* Placeholder backgrounds — replace with actual images */
+.cth-pr1{background:linear-gradient(135deg,#07101e,#0d1d30)}
+.cth-pr2{background:linear-gradient(135deg,#140808,#261010)}
+.cth-ae{background:linear-gradient(135deg,#110818,#1e1028)}
+.cth-cc{background:linear-gradient(135deg,#081410,#0e2218)}
+
+.cc-ph{position:absolute;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:3rem;font-weight:400;font-style:italic;opacity:.12;letter-spacing:.02em}
+.cth-pr1 .cc-ph{color:#6ea0be}.cth-pr2 .cc-ph{color:#b88a60}.cth-ae .cc-ph{color:#9f7ec0}.cth-cc .cc-ph{color:#82b5a0}
+
+/* ── IMAGE INSTRUCTION COMMENT inside each .cc-thumb ──
+   Add your course thumbnail image like so:
+   <img src="images/course-color-grading.jpg"
+        alt="Color Grading Masterclass"
+        onload="this.classList.add('loaded')"/>
+   Recommended size: 880×495px (16:9), JPG/WebP, max 600KB
+   The image will auto-fade in when loaded.
+*/
+
+.cc-ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;background:rgba(0,0,0,0);transition:background .25s}
+.cc-card:hover .cc-ov{background:rgba(0,0,0,.32)}
+.cc-play{width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.7);transition:opacity .25s,transform .25s;background:rgba(0,0,0,.2)}
+.cc-card:hover .cc-play{opacity:1;transform:scale(1)}
+.cc-play::after{content:'';width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:14px solid white;margin-left:3px}
+.cc-preview{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);opacity:0;transition:opacity .25s .05s;padding:.3rem .7rem;border:1px solid rgba(255,255,255,.2)}
+.cc-card:hover .cc-preview{opacity:1}
+
+.cc-body{padding:1.5rem 1.8rem;flex:1;display:flex;flex-direction:column}
+.cc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem}
+.cc-app{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)}
+.cc-badges{display:flex;gap:.32rem;flex-wrap:wrap}
+.badge{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.05em;text-transform:uppercase;padding:.16rem .42rem}
+.b-stream{background:var(--accent-d);color:var(--accent);border:1px solid rgba(130,181,160,.18)}
+.b-hrs{background:var(--surface2);color:var(--text3);border:1px solid var(--border)}
+.b-lvl{border:1px solid var(--border2);color:var(--text3)}
+.cc-name{font-family:'Instrument Serif',serif;font-size:1.4rem;font-weight:400;line-height:1.2;color:var(--text);margin-bottom:.6rem;letter-spacing:-.01em}
+.cc-desc{font-size:.8rem;color:var(--text2);line-height:1.9;font-weight:300;margin-bottom:1.2rem;flex:1}
+.cc-modules{display:flex;flex-direction:column;gap:.3rem;margin-bottom:1.4rem}
+.cc-mod{display:flex;align-items:center;gap:.55rem;font-size:.76rem;color:var(--text2)}
+.cc-mod-dot{width:4px;height:4px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.cc-foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:1.1rem;gap:1rem}
+.cc-price-wrap{display:flex;flex-direction:column}
+.cc-price{font-family:'Instrument Serif',serif;font-size:1.5rem;color:var(--text);line-height:1}
+.cc-price-note{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-top:.15rem}
+.cc-enroll{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.55rem 1.4rem;background:var(--accent);color:var(--bg);border:1px solid var(--accent);transition:all .22s}
+.cc-enroll:hover{background:transparent;color:var(--accent)}
+.cc-enroll.added{background:var(--accent-d);color:var(--accent);border-color:var(--accent)}
+.cc-bar{position:absolute;bottom:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform .32s ease}
+.cc-card:hover .cc-bar{transform:scaleX(1)}
+
+/* ── FAQ / INFO BAND ── */
+.info-band{background:var(--bg2);border-top:1px solid var(--border);padding:5rem}
+.info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3rem}
+.info-item{border-left:1px solid var(--border2);padding-left:1.5rem}
+.info-icon{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--accent);letter-spacing:.1em;margin-bottom:.7rem}
+.info-title{font-family:'Instrument Serif',serif;font-size:1.05rem;color:var(--text);margin-bottom:.4rem}
+.info-body{font-size:.78rem;color:var(--text2);line-height:1.85;font-weight:300}
+
+/* ── CTA ── */
+.courses-cta{background:var(--bg);border-top:1px solid var(--border);padding:5rem;display:flex;align-items:center;justify-content:space-between;gap:3rem}
+.courses-cta h2{font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3vw,2.4rem);font-weight:400;letter-spacing:-.015em;margin-bottom:.5rem}
+.courses-cta h2 em{font-style:italic;color:var(--accent)}
+.courses-cta p{font-size:.82rem;color:var(--text2);font-weight:300}
+.cta-btns{display:flex;gap:.75rem;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<div class="tl-rail"></div>
+<div class="tl-scrub"></div>
+
+<nav>
+  <a href="index.html" class="logo" data-cursor="link">nhajuly<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html" data-cursor="link">Home</a></li>
+    <li><a href="courses.html" data-cursor="link">Courses</a></li>
+    <li><a href="store.html" data-cursor="link">Store</a></li>
+    <li><a href="portfolio.html" data-cursor="link">Portfolio</a></li>
+    <li><a href="checkout.html" data-cursor="link">Checkout</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-btn" id="themeBtn" data-cursor="link"><span id="themeIcon">☽</span><span id="themeLabel" class="theme-label">Light</span></button>
+    <button class="cart-btn" onclick="openCart()" data-cursor="link">
+      <svg class="cart-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 1h2l2.4 9h7.2l1.4-6H4"/><circle cx="7" cy="13.5" r="1"/><circle cx="12" cy="13.5" r="1"/></svg>
+      Cart<span class="cart-count" id="cartCount">0</span>
+    </button>
+    <a href="checkout.html" class="nav-cta" data-cursor="link">Enroll Now</a>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- MOBILE OVERLAY -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-head">
+    <div class="mobile-menu-logo">nhajuly<span>.</span></div>
+    <button class="mobile-close" id="mobileClose">✕ Close</button>
+  </div>
+  <div class="mobile-menu-links">
+    <a href="index.html">Home</a>
+    <a href="courses.html">Courses</a>
+    <a href="store.html">Store</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="checkout.html">Checkout</a>
+  </div>
+  <div class="mobile-menu-foot">
+    <button class="theme-btn" onclick="document.getElementById('themeBtn').click()" style="width:100%;justify-content:center"><span id="mobileThemeIcon">☽</span> Toggle Theme</button>
+  </div>
+</div>
+
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head"><div class="cart-head-title">Your Cart</div><button class="cart-close" onclick="closeCart()" data-cursor="link">✕ Close</button></div>
+  <div class="cart-items" id="cartItems"><div class="cart-empty" id="cartEmpty"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1"><path d="M4 4h5l4.8 18h14.4l2.8-12H9"/><circle cx="14" cy="27" r="2"/><circle cx="24" cy="27" r="2"/></svg><p>Cart is empty</p></div></div>
+  <div class="cart-foot"><div class="cart-total-row"><div class="cart-total-label">Total</div><div class="cart-total-price" id="cartTotal">$0</div></div><button class="cart-checkout-btn" onclick="window.location.href='checkout.html'" data-cursor="link">Checkout →</button><button class="cart-continue" onclick="closeCart()" data-cursor="link">Continue Shopping</button></div>
+</div>
+
+<!-- PAGE HERO -->
+<div class="p-hero">
+  <div class="p-hero-tag">nhajuly · Courses</div>
+  <h1 class="p-hero-title">Learn to <em>Edit.</em></h1>
+  <p class="p-hero-sub">Four deep-dive courses. Every major NLE. From cinematic color grading to viral YouTube pacing — built for editors who want to level up fast.</p>
+  <div class="p-hero-stats">
+    <div><div class="p-hs-num">4</div><div class="p-hs-lbl">Courses Live</div></div>
+    <div><div class="p-hs-num">29hrs</div><div class="p-hs-lbl">Total Content</div></div>
+    <div><div class="p-hs-num">∞</div><div class="p-hs-lbl">Lifetime Access</div></div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterCourses('all',this)" data-cursor="link">All Courses</button>
+  <button class="filter-btn" onclick="filterCourses('premiere',this)" data-cursor="link">Premiere Pro</button>
+  <button class="filter-btn" onclick="filterCourses('ae',this)" data-cursor="link">After Effects</button>
+  <button class="filter-btn" onclick="filterCourses('capcut',this)" data-cursor="link">CapCut</button>
+</div>
+
+<!-- COURSES FULL GRID -->
+<div class="courses-section">
+  <div class="c-full-grid">
+
+    <!-- COURSE 1 -->
+    <div class="cc-card" data-cat="premiere" data-cursor="play">
+      <div class="cc-thumb cth-pr1">
+        <!--
+          ── COURSE THUMBNAIL IMAGE ──
+          Upload your thumbnail and replace the src below.
+          Recommended: 880×495px, JPG or WebP, max 600KB
+          Example: <img src="images/course-color-grading.jpg" alt="Color Grading Masterclass" onload="this.classList.add('loaded')"/>
+        -->
+        <div class="cc-ov">
+          <div class="cc-play"></div>
+          <div class="cc-preview">Preview Lesson</div>
+        </div>
+      </div>
+      <div class="cc-body">
+        <div class="cc-top">
+          <div class="cc-app">Adobe Premiere Pro</div>
+          <div class="cc-badges"><div class="badge b-stream">Stream only</div><div class="badge b-hrs">8 hrs</div><div class="badge b-lvl">Intermediate</div></div>
+        </div>
+        <div class="cc-name">Color Grading Masterclass</div>
+        <div class="cc-desc">Master the full color pipeline inside Premiere Pro — from log footage correction to final cinematic look delivery. Learn how to match shots, build custom LUTs, and create signature grades that make your work instantly recognizable.</div>
+        <div class="cc-modules">
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>Lumetri Color deep-dive & panel mastery</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>Log & raw footage correction workflows</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>Building & exporting custom LUTs</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>Cinematic look creation from scratch</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot" style="background:var(--purple)"></div><span>Bonus: DaVinci cross-grading workflow</span></div>
+        </div>
+        <div class="cc-foot">
+          <div class="cc-price-wrap"><div class="cc-price">$49</div><div class="cc-price-note">One-time · Lifetime stream</div></div>
+          <button class="cc-enroll" data-cursor="link" onclick="addToCart('Color Grading Masterclass','Course',49,this)" data-product-name="Color Grading Masterclass">Enroll Now</button>
+        </div>
+      </div>
+      <div class="cc-bar" style="background:var(--blue)"></div>
+    </div>
+
+    <!-- COURSE 2 -->
+    <div class="cc-card" data-cat="premiere" data-cursor="play">
+      <div class="cc-thumb cth-pr2">
+        <!--
+          ── COURSE THUMBNAIL IMAGE ──
+          Replace src with your fast-paced YouTube editing course thumbnail.
+          Example: <img src="images/course-youtube.jpg" alt="Fast-Paced YouTube Editing" onload="this.classList.add('loaded')"/>
+        -->
+        <div class="cc-ov">
+          <div class="cc-play"></div>
+          <div class="cc-preview">Preview Lesson</div>
+        </div>
+      </div>
+      <div class="cc-body">
+        <div class="cc-top">
+          <div class="cc-app">Adobe Premiere Pro</div>
+          <div class="cc-badges"><div class="badge b-stream">Stream only</div><div class="badge b-hrs">6 hrs</div><div class="badge b-lvl">All Levels</div></div>
+        </div>
+        <div class="cc-name">Fast-Paced YouTube Editing</div>
+        <div class="cc-desc">The editing style that drives watch time. Learn the retention-first framework used by top-performing channels — cut patterns, sound design layers, B-roll strategies, and hook structures that hold audiences to the end.</div>
+        <div class="cc-modules">
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>The retention-first cut method</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>Hook structure & pattern interrupt timing</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>Sound design layering for engagement</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>B-roll sequencing & transitions</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot" style="background:var(--orange)"></div><span>Bonus: Export settings for every platform</span></div>
+        </div>
+        <div class="cc-foot">
+          <div class="cc-price-wrap"><div class="cc-price">$59</div><div class="cc-price-note">One-time · Lifetime stream</div></div>
+          <button class="cc-enroll" data-cursor="link" onclick="addToCart('Fast-Paced YouTube Editing','Course',59,this)" data-product-name="Fast-Paced YouTube Editing">Enroll Now</button>
+        </div>
+      </div>
+      <div class="cc-bar" style="background:var(--orange)"></div>
+    </div>
+
+    <!-- COURSE 3 -->
+    <div class="cc-card" data-cat="ae" data-cursor="play">
+      <div class="cc-thumb cth-ae">
+        <!--
+          ── COURSE THUMBNAIL IMAGE ──
+          Replace src with your Motion Graphics Foundations thumbnail.
+          Example: <img src="images/course-motion.jpg" alt="Motion Graphics Foundations" onload="this.classList.add('loaded')"/>
+        -->
+        <div class="cc-ov">
+          <div class="cc-play"></div>
+          <div class="cc-preview">Preview Lesson</div>
+        </div>
+      </div>
+      <div class="cc-body">
+        <div class="cc-top">
+          <div class="cc-app">Adobe After Effects</div>
+          <div class="cc-badges"><div class="badge b-stream">Stream only</div><div class="badge b-hrs">10 hrs</div><div class="badge b-lvl">Beginner–Mid</div></div>
+        </div>
+        <div class="cc-name">Motion Graphics Foundations</div>
+        <div class="cc-desc">Go from zero to building production-ready motion graphics. Covers keyframe animation, expressions, text animators, shape layers, and how to build modular systems you can reuse across projects — the way agencies work.</div>
+        <div class="cc-modules">
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>Keyframing & easing with the graph editor</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>Essential expressions (wiggle, loopOut, etc)</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>Text animators & kinetic typography</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>Building reusable component libraries</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot" style="background:var(--purple)"></div><span>Bonus: Dynamic link with Premiere Pro</span></div>
+        </div>
+        <div class="cc-foot">
+          <div class="cc-price-wrap"><div class="cc-price">$69</div><div class="cc-price-note">One-time · Lifetime stream</div></div>
+          <button class="cc-enroll" data-cursor="link" onclick="addToCart('Motion Graphics Foundations','Course',69,this)" data-product-name="Motion Graphics Foundations">Enroll Now</button>
+        </div>
+      </div>
+      <div class="cc-bar" style="background:var(--purple)"></div>
+    </div>
+
+    <!-- COURSE 4 -->
+    <div class="cc-card" data-cat="capcut" data-cursor="play">
+      <div class="cc-thumb cth-cc">
+        <!--
+          ── COURSE THUMBNAIL IMAGE ──
+          Replace src with your CapCut for Creators thumbnail.
+          Example: <img src="images/course-capcut.jpg" alt="Mobile Editing for Creators" onload="this.classList.add('loaded')"/>
+        -->
+        <div class="cc-ov">
+          <div class="cc-play"></div>
+          <div class="cc-preview">Preview Lesson</div>
+        </div>
+      </div>
+      <div class="cc-body">
+        <div class="cc-top">
+          <div class="cc-app">CapCut</div>
+          <div class="cc-badges"><div class="badge b-stream">Stream only</div><div class="badge b-hrs">5 hrs</div><div class="badge b-lvl">Beginner</div></div>
+        </div>
+        <div class="cc-name">Mobile Editing for Creators</div>
+        <div class="cc-desc">CapCut is more powerful than most people know. This course covers professional-level editing using only your phone — from vertical short-form for TikTok/Reels to polished horizontal edits ready for YouTube.</div>
+        <div class="cc-modules">
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>CapCut Pro features & hidden tools</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>Short-form pacing for TikTok & Reels</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>Auto-captions & text animation on mobile</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot"></div><span>Template creation & batch workflow</span></div>
+          <div class="cc-mod"><div class="cc-mod-dot" style="background:var(--accent)"></div><span>Bonus: Going from mobile to desktop pipeline</span></div>
+        </div>
+        <div class="cc-foot">
+          <div class="cc-price-wrap"><div class="cc-price">$29</div><div class="cc-price-note">One-time · Lifetime stream</div></div>
+          <button class="cc-enroll" data-cursor="link" onclick="addToCart('Mobile Editing for Creators','Course',29,this)" data-product-name="Mobile Editing for Creators">Enroll Now</button>
+        </div>
+      </div>
+      <div class="cc-bar" style="background:var(--accent)"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- INFO BAND -->
+<div class="info-band">
+  <div class="eyebrow"><span class="n">// Details</span> What you get</div>
+  <div class="info-grid">
+    <div class="info-item">
+      <div class="info-icon">01 / Stream</div>
+      <div class="info-title">Stream-Only Access</div>
+      <div class="info-body">All courses are stream-only to prevent piracy and keep prices low. Watch on any device — desktop, tablet, or phone. No app required.</div>
+    </div>
+    <div class="info-item">
+      <div class="info-icon">02 / Access</div>
+      <div class="info-title">Lifetime Access</div>
+      <div class="info-body">Pay once, access forever. Courses get updated with new lessons over time — all updates are included at no extra cost.</div>
+    </div>
+    <div class="info-item">
+      <div class="info-icon">03 / Support</div>
+      <div class="info-title">Community & Q&A</div>
+      <div class="info-body">Enroll and get access to the private community. Ask questions, share work, get feedback. Real editors helping real editors.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="courses-cta">
+  <div>
+    <h2>Not sure which <em>course?</em></h2>
+    <p>Start with Color Grading — it's the most universally applicable skill across every NLE.</p>
+  </div>
+  <div class="cta-btns">
+    <a href="checkout.html" class="btn-primary" data-cursor="link">Go to Checkout</a>
+    <a href="store.html" class="btn-ghost" data-cursor="link">Browse Store</a>
+  </div>
+</div>
+
+<footer>
+  <div class="fl">nhajuly<span>.</span></div>
+  <div class="fc">© 2025 Panha Lory · All rights reserved.</div>
+  <div class="flinks">
+    <a href="index.html" data-cursor="link">Home</a>
+    <a href="store.html" data-cursor="link">Store</a>
+    <a href="portfolio.html" data-cursor="link">Portfolio</a>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+function filterCourses(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.cc-card').forEach(function(c){
+    if (cat === 'all' || c.dataset.cat === cat) c.classList.remove('hidden');
+    else c.classList.add('hidden');
+  });
+}
+</script>
+</body>
+</html>
+
